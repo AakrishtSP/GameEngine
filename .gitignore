@@ -34,3 +34,8 @@
 
 build/
 cmake-build-debug/
+!src/
+!src/**
+!CMakeLists.txt
+!assets/
+!assets/**
