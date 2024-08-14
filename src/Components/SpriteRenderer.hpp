@@ -10,7 +10,7 @@ class SpriteRenderer : public Component
 {
 public:
     SpriteRenderer(); 
-    ~SpriteRenderer();
+    ~SpriteRenderer() override;
 
     void loadImage(const std::string& filename);
     void resizeImage(int width, int height, bool useNearestNeighbour = false);
@@ -21,12 +21,12 @@ public:
     void initTexture();
 
     void setOffset(const Vector2& offset) { this->offset = offset; }
-    void setScale(float scale) { this->scale = scale; }
-    void setRotation(float rotation) { this->rotation = rotation; }
+    void setScale(const float scale) { this->scale = scale; }
+    void setRotation(const float rotation) { this->rotation = rotation; }
 
     void update() override;
     void draw() const;
-    void getTransform();
+    void getTransform() const;
     
 
 protected:

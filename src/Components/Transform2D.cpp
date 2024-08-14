@@ -1,24 +1,19 @@
 #include "Transform2D.hpp"
 #include "../Component.hpp"
 
-inline void Transform2D::transferOrigin() {
-    gamePosition = {(GetScreenWidth() / 2) + worldPosition.x, (GetScreenHeight() / 2) - worldPosition.y};
-}
 
 inline void Transform2D::calculateWorldPosition() {
     if (owner == nullptr) {
         std::cerr << "owner not found" << std::endl;
         return;
     }
-    auto parentObject = owner->getParent();
-    if (parentObject == nullptr) {
+    if (const auto parentObject = owner->getParent(); parentObject == nullptr) {
         worldPosition = position;
         worldRotation = rotation;
         worldScale = scale;
         return;
     } else {
-        auto parentTransform = parentObject->getComponent<Transform2D>();
-        if (parentTransform) {
+        if (const auto parentTransform = parentObject->getComponent<Transform2D>()) {
             worldPosition.x = parentTransform->worldPosition.x + position.x;
             worldPosition.y = parentTransform->worldPosition.y + position.y;
             worldRotation = parentTransform->worldRotation + rotation;
@@ -30,7 +25,6 @@ inline void Transform2D::calculateWorldPosition() {
 
 void Transform2D::update() {
     calculateWorldPosition();
-    transferOrigin();
     // std::cout << "World Position: " << worldPosition.x << ", " << worldPosition.y << std::endl;
     // std::cout << "World Rotation: " << worldRotation << std::endl;
 }

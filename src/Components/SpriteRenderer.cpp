@@ -7,7 +7,7 @@
 SpriteRenderer::SpriteRenderer(): offset(Vector2()), size(Vector2()) {
     // getTransform();
     texture = {0};
-    image = {0};
+    image = {};
 };
 
 SpriteRenderer::~SpriteRenderer() {
@@ -15,7 +15,7 @@ SpriteRenderer::~SpriteRenderer() {
 }
 
 void SpriteRenderer::loadImage(const std::string &filename) {
-    struct stat buffer;
+    struct stat buffer{};
     if (stat(filename.c_str(), &buffer) != 0) {
         std::cerr << "File does not exist: " << filename << std::endl;
         return;
@@ -26,7 +26,7 @@ void SpriteRenderer::loadImage(const std::string &filename) {
     image = LoadImage(filename.c_str());
 }
 
-void SpriteRenderer::resizeImage(int width, int height, bool useNearestNeighbour) {
+void SpriteRenderer::resizeImage(const int width, const int height, const bool useNearestNeighbour) {
     if (useNearestNeighbour) {
         ImageResizeNN(&image, width, height);
     } else {
@@ -76,9 +76,9 @@ void SpriteRenderer::update() {
 
 void SpriteRenderer::draw() const {
     if (transform) {
-        Vector2 position = transform->getGamePosition();
-        float worldRotation = transform->getWorldRotation();
-        float worldScale = transform->getWorldScale();
+        const Vector2 position = transform->getWorldPosition();
+        const float worldRotation = transform->getWorldRotation();
+        const float worldScale = transform->getWorldScale();
 
         DrawTextureEx(texture, position + offset - size * scale * worldScale / 2, worldRotation + rotation, scale,
                       {255, 255, 255, 255});
@@ -87,7 +87,7 @@ void SpriteRenderer::draw() const {
     }
 }
 
-void SpriteRenderer::getTransform() {
+void SpriteRenderer::getTransform() const {
     if (!owner) {
         std::cerr << "owner not found" << std::endl;
         return;

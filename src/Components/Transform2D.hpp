@@ -3,25 +3,23 @@
 
 
 
-class Transform2D : public Component
+class Transform2D final : public Component
 {
 public:
-    Transform2D() : position({0, 0}), rotation(0), scale(1){}
-    Vector2 getPosition() const { return position; }
+    Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(0), worldPosition(), worldRotation(0) {
+    }
+
+    [[nodiscard]] Vector2 getPosition() const { return position; }
     void setPosition(const Vector2 &position) { this->position = position; }
-    float getRotation() const { return rotation; }
-    void setRotation(float rotation) { this->rotation = rotation; }
-    float getScale() const { return scale; }
+    [[nodiscard]] float getRotation() const { return rotation; }
+    void setRotation(const float rotation) { this->rotation = rotation; }
+    [[nodiscard]] float getScale() const { return scale; }
     void setScale(const float &scale) { this->scale = scale; }
-    Vector2 getWorldPosition() const { return worldPosition; }
-    float getWorldRotation() const { return worldRotation; }
-    float getWorldScale() const { return worldScale; }
+    [[nodiscard]] Vector2 getWorldPosition() const { return worldPosition; }
+    [[nodiscard]] float getWorldRotation() const { return worldRotation; }
+    [[nodiscard]] float getWorldScale() const { return worldScale; }
     void translate(const Vector2 &translation) { position = position + translation; }
-    void rotate(float rotation) { this->rotation += rotation; }
-    Vector2 getGamePosition() { return gamePosition; }
-
-
-    void transferOrigin();
+    void rotate(const float rotation) { this->rotation += rotation; }
 
     void calculateWorldPosition();
 
@@ -34,6 +32,4 @@ protected:
     float worldScale;
     Vector2 worldPosition;
     float worldRotation;
-
-    Vector2 gamePosition;
 };
