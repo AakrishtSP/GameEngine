@@ -28,3 +28,15 @@ void Transform2D::update() {
     // std::cout << "World Position: " << worldPosition.x << ", " << worldPosition.y << std::endl;
     // std::cout << "World Rotation: " << worldRotation << std::endl;
 }
+
+Vector2 Transform2D::getGamePosition() const {
+    // Get the half of the screen width and height
+    float halfScreenWidth = GetScreenWidth() / 2.0f;
+    float halfScreenHeight = GetScreenHeight() / 2.0f;
+
+    // Calculate the game position with flipped y axis
+    float gamePosX = halfScreenWidth + worldPosition.x;
+    float gamePosY = halfScreenHeight - worldPosition.y;
+
+    return Vector2{gamePosX, gamePosY};
+}

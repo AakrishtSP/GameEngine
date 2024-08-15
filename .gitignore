@@ -33,6 +33,7 @@
 *.app
 
 build/
+build/**
 cmake-build-debug/
 !src/
 !src/**

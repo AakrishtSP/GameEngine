@@ -23,6 +23,8 @@ public:
 
     void calculateWorldPosition();
 
+    [[nodiscard]] Vector2 getGamePosition() const;
+
     void update() override;
 
 protected:

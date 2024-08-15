@@ -76,7 +76,7 @@ void SpriteRenderer::update() {
 
 void SpriteRenderer::draw() const {
     if (transform) {
-        const Vector2 position = transform->getWorldPosition();
+        const Vector2 position = transform->getGamePosition();
         const float worldRotation = transform->getWorldRotation();
         const float worldScale = transform->getWorldScale();
 

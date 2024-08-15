@@ -24,16 +24,16 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
 endif()
 
 # Our Project
-#file(GLOB SOURCES
-#        *.h
-#        *.cpp
-#)
-#add_executable(ClionProject ${SOURCE_FILES} ${SOURCES})
-add_executable(${PROJECT_NAME}
-        src/main.cpp
-        src/GameObject.cpp
-        src/Components/Transform2D.cpp
-        src/Components/SpriteRenderer.cpp)
+# add_executable(${PROJECT_NAME}
+#         src/main.cpp
+#         src/GameObject.cpp
+#         src/Components/Transform2D.cpp
+#         src/Components/SpriteRenderer.cpp)
+
+# Automatically add all .cpp files in src and subdirectories
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.cpp)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} raylib)
 
