@@ -7,6 +7,7 @@ class Transform2D final : public Component
 {
 public:
     Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(0), worldPosition(), worldRotation(0) {
+        Component::type = "Transform2D";
     }
 
     [[nodiscard]] Vector2 getPosition() const { return position; }

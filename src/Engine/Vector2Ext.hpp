@@ -46,8 +46,7 @@ inline float Magnitude(const Vector2& vec) {
 
 // Normalize Vector2 (convert to unit vector)
 inline Vector2 Normalize(const Vector2& vec) {
-    float mag = Magnitude(vec);
-    if (mag != 0.0f) {
+    if (const float mag = Magnitude(vec); mag != 0.0f) {
         return { vec.x / mag, vec.y / mag };
     }
     return { 0.0f, 0.0f }; // Handle zero vector case
@@ -60,17 +59,16 @@ inline float Distance(const Vector2& point1, const Vector2& point2) {
 
 // Angle between two Vector2 vectors (in radians)
 inline float Angle(const Vector2& vec1, const Vector2& vec2) {
-    float dot = DotProduct(vec1, vec2);
-    float mag1 = Magnitude(vec1);
-    float mag2 = Magnitude(vec2);
+    const float dot = DotProduct(vec1, vec2);
+    const float mag1 = Magnitude(vec1);
+    const float mag2 = Magnitude(vec2);
     return acosf(dot / (mag1 * mag2));
 }
 
 // Project Vector2 `vec` onto Vector2 `onto`
 inline Vector2 Project(const Vector2& vec, const Vector2& onto) {
-    float ontoMagSq = DotProduct(onto, onto);
-    if (ontoMagSq != 0.0f) {
-        float scalar = DotProduct(vec, onto) / ontoMagSq;
+    if (const float ontoMagSq = DotProduct(onto, onto); ontoMagSq != 0.0f) {
+        const float scalar = DotProduct(vec, onto) / ontoMagSq;
         return onto * scalar;
     }
     return { 0.0f, 0.0f }; // Handle zero vector case

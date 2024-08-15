@@ -40,6 +40,14 @@ int main() {
     child2Transform->setPosition({-100, -100});
     child2Sprite->getTransform();
 
+    Serializer serializer;
+
+    // // Serialize the game object
+    // auto gameObjectJson = serializer.serialize(root);
+    // std::ofstream outFile("../savefile.json");
+    // outFile << gameObjectJson.dump(4);
+    // outFile.close();
+
     SetTargetFPS(60); // Set the game to run at 60 frames-per-second
 
     while (!WindowShouldClose()) // Detect window close button or ESC key

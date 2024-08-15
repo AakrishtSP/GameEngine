@@ -9,11 +9,14 @@ public:
     virtual ~Component() = default;
     virtual void update() = 0;
     void setOwner(GameObject* owner) { this->owner = owner; }
-    GameObject* getOwner() const { return owner; }
-    void setActive(bool active) { isActive = active; }
+    [[nodiscard]] GameObject* getOwner() const { return owner; }
+    void setActive(const bool active) { isActive = active; }
+
+    [[nodiscard]] std::string getType() const { return type; }
 
 
 protected:
+    std::string type;
     bool isActive = true;
     GameObject* owner = nullptr;
 };

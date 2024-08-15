@@ -11,6 +11,14 @@
 #include "Vector2Ext.hpp"
 
 
+std::shared_ptr<Component> GameObject::addComponent(const std::string &type) { 
+    return std::shared_ptr<Component>();
+ }
+
+std::shared_ptr<Component> GameObject::addComponent(const std::string &type, const nlohmann::json &jsonData) {
+    return std::shared_ptr<Component>();
+}
+
 void GameObject::addChild(std::shared_ptr<GameObject> child) {
     child->parent = this;
     children.push_back(child);
