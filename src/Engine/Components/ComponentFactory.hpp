@@ -5,8 +5,6 @@
 #include <string>
 #include <memory>
 #include "../Component.hpp"
-#include "Transform2D.hpp"
-#include "SpriteRenderer.hpp"
 
 class ComponentFactory {
 public:
