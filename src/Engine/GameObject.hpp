@@ -8,10 +8,8 @@
 #include <typeinfo>
 #include <memory>
 #include <vector>
-#include <nlohmann/json.hpp>
-#include <type_traits>
-
-#include "Base.hpp"
+#include "Component.hpp"
+#include "Vector2Ext.hpp"
 
 class Component; // Forward declaration of Component
 
@@ -24,8 +22,6 @@ public:
 
     template <typename T>
     std::shared_ptr<T> addComponent();
-    std::shared_ptr<Component> addComponent(const std::string &type);
-    std::shared_ptr<Component> addComponent(const std::string &type, const nlohmann::json &jsonData);
 
     template <typename T>
     std::shared_ptr<T> getComponent();
@@ -34,9 +30,6 @@ public:
     GameObject &addChild(const std::string &name);
 
     GameObject *getParent() const;
-
-    std::vector<std::shared_ptr<GameObject>> getChildren() const { return children; }
-    std::unordered_map<std::type_index, std::shared_ptr<Component>> getComponents() const { return components; }
 
     void update();
 

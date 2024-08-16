@@ -1,8 +1,10 @@
 #include "SpriteRenderer.hpp"
+#include "../Component.hpp"
+#include "Transform2D.hpp"
+#include <sys/stat.h>
 
 
 SpriteRenderer::SpriteRenderer(): offset(Vector2()), size(Vector2()) {
-    type = "SpriteRenderer";
     // getTransform();
     texture = {0};
     image = {};

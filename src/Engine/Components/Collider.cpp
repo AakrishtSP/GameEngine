@@ -2,7 +2,6 @@
 
 Collider::Collider()
 {
-    type = "Collider";
 }
 
 Collider::~Collider()
