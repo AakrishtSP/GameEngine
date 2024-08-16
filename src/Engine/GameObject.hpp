@@ -8,6 +8,7 @@
 #include <typeinfo>
 #include <memory>
 #include <vector>
+#include <nlohmann/json.hpp>
 #include "Component.hpp"
 #include "Vector2Ext.hpp"
 
@@ -31,9 +32,12 @@ public:
 
     GameObject *getParent() const;
 
+    nlohmann::json serialize();
+    void deserialize(const nlohmann::json &json);
+
     void update();
 
-    virtual ~GameObject() {}
+    ~GameObject();
 
 protected:
     std::string name;

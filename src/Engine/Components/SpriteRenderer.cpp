@@ -4,7 +4,40 @@
 #include <sys/stat.h>
 
 
-SpriteRenderer::SpriteRenderer(): offset(Vector2()), size(Vector2()) {
+nlohmann::json SpriteRenderer::serialize() { 
+    nlohmann::json json;
+    json["componentType"] = "SpriteRenderer";
+    json["isActive"] = isActive;
+    json["offset"] = {offset.x, offset.y};
+    json["scale"] = scale;
+    json["rotation"] = rotation;
+    json["filename"] = filename;
+    json["size"] = {size.x, size.y};
+    return json;
+}
+
+void SpriteRenderer::deserialize(const nlohmann::json& json)
+{
+    isActive = json["isActive"].get<bool>();
+
+    offset.x = json["offset"][0].get<float>();
+    offset.y = json["offset"][1].get<float>();
+
+    scale = json["scale"].get<float>();
+
+    rotation = json["rotation"].get<float>();
+
+    filename = json["filename"].get<std::string>();
+
+    size.x = json["size"][0].get<float>();
+    size.y = json["size"][1].get<float>();
+
+    // // If the texture needs to be loaded from the file
+    // loadImage(filename.c_str());
+    // initTexture();
+}
+
+SpriteRenderer::SpriteRenderer() : offset(Vector2()), size(Vector2()) {
     // getTransform();
     texture = {0};
     image = {};
@@ -23,7 +56,9 @@ void SpriteRenderer::loadImage(const std::string &filename) {
     if (image.data) {
         UnloadImage(image);
     }
+    this->filename = filename;
     image = LoadImage(filename.c_str());
+    isTextureInitialized = false;
 }
 
 void SpriteRenderer::resizeImage(const int width, const int height, const bool useNearestNeighbour) {
@@ -32,6 +67,8 @@ void SpriteRenderer::resizeImage(const int width, const int height, const bool u
     } else {
         ImageResize(&image, width, height);
     }
+    size = {static_cast<float>(image.width), static_cast<float>(image.height)};
+    isTextureInitialized = false;
 }
 
 void SpriteRenderer::setImage(const Image &image) {
@@ -39,6 +76,7 @@ void SpriteRenderer::setImage(const Image &image) {
         UnloadImage(this->image);
     }
     this->image = image;
+    isTextureInitialized = false;
 }
 
 void SpriteRenderer::setTexture(const Texture2D &texture) {
@@ -46,6 +84,8 @@ void SpriteRenderer::setTexture(const Texture2D &texture) {
         UnloadTexture(this->texture);
     }
     this->texture = texture;
+    size = {static_cast<float>(texture.width), static_cast<float>(texture.height)};
+    isTextureInitialized = true;
 }
 
 void SpriteRenderer::initTexture() {
@@ -55,6 +95,7 @@ void SpriteRenderer::initTexture() {
         }
         texture = LoadTextureFromImage(image);
         size = {static_cast<float>(texture.width), static_cast<float>(texture.height)};
+        isTextureInitialized = true;
         UnloadImage(image);
     } else {
         std::cerr << "Image not loaded" << std::endl;
@@ -68,14 +109,21 @@ void SpriteRenderer::update() {
     if (!transform) {
         getTransform();
     }
+    if(!isTextureInitialized && !image.data && filename != "") {
+        loadImage(filename);
+        resizeImage(size.x, size.y);
+    }
     if (!texture.id) {
         initTexture();
     }
     draw();
 }
 
-void SpriteRenderer::draw() const {
-    if (transform) {
+void SpriteRenderer::draw() {
+    if (!isTextureInitialized) {
+        initTexture();
+    }
+    if (transform ) {
         const Vector2 position = transform->getGamePosition();
         const float worldRotation = transform->getWorldRotation();
         const float worldScale = transform->getWorldScale();

@@ -1,0 +1,79 @@
+{
+    "children": [
+        {
+            "children": [],
+            "components": [
+                {
+                    "componentType": "SpriteRenderer",
+                    "filename": "../assets/Raylib_logo.png",
+                    "isActive": true,
+                    "offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": 0.0,
+                    "scale": 1.0,
+                    "size": [
+                        100.0,
+                        100.0
+                    ]
+                },
+                {
+                    "componentType": "Transform2D",
+                    "isActive": true,
+                    "position": [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": 0.0,
+                    "scale": 1.0
+                }
+            ],
+            "name": "Child1"
+        },
+        {
+            "children": [],
+            "components": [
+                {
+                    "componentType": "SpriteRenderer",
+                    "filename": "../assets/Raylib_logo.png",
+                    "isActive": true,
+                    "offset": [
+                        0.0,
+                        0.0
+                    ],
+                    "rotation": 0.0,
+                    "scale": 1.0,
+                    "size": [
+                        150.0,
+                        150.0
+                    ]
+                },
+                {
+                    "componentType": "Transform2D",
+                    "isActive": true,
+                    "position": [
+                        -100.0,
+                        -100.0
+                    ],
+                    "rotation": 0.0,
+                    "scale": 1.0
+                }
+            ],
+            "name": "Child2"
+        }
+    ],
+    "components": [
+        {
+            "componentType": "Transform2D",
+            "isActive": true,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "rotation": 0.0,
+            "scale": 1.0
+        }
+    ],
+    "name": "Root"
+}

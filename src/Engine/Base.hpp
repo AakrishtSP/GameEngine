@@ -4,6 +4,7 @@
 #include "GameObject.hpp"
 #include "Component.hpp"
 #include "Components/Components.hpp"
+#include <nlohmann/json.hpp>
 
 // class EmptyComponent : public Component
 // {

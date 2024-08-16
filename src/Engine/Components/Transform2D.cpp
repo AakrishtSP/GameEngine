@@ -2,6 +2,27 @@
 #include "../Component.hpp"
 
 
+nlohmann::json Transform2D::serialize() { 
+    nlohmann::json json;
+    json["componentType"] = "Transform2D";
+    json["isActive"] = isActive;
+    json["position"] = {position.x, position.y};
+    json["rotation"] = rotation;
+    json["scale"] = scale;
+    return json;
+}
+
+void Transform2D::deserialize(const nlohmann::json &json) {
+    isActive = json["isActive"].get<bool>();
+
+    position.x = json["position"][0].get<float>();
+    position.y = json["position"][1].get<float>();
+
+    rotation = json["rotation"].get<float>();
+
+    scale = json["scale"].get<float>();
+}
+
 inline void Transform2D::calculateWorldPosition() {
     if (owner == nullptr) {
         std::cerr << "owner not found" << std::endl;

@@ -40,3 +40,5 @@ cmake-build-debug/
 !CMakeLists.txt
 !assets/
 !assets/**
+!Data/
+!Data/**

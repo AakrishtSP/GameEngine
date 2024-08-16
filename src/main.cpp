@@ -1,7 +1,6 @@
-// #include "Component.hpp"
-// #include "Components/Components.hpp"
 #include "Engine/Base.hpp"
 #include <filesystem>
+#include <fstream>
 
 #include "rlgl.h"
 
@@ -10,6 +9,8 @@ int main() {
     // Initialization
     constexpr int screenWidth = 1280;
     constexpr int screenHeight = 720;
+    SetTraceLogLevel(LOG_WARNING);
+    registerComponents();
 
     const std::filesystem::path currentPath = std::filesystem::current_path();
     std::cout << "Current Working Directory: " << currentPath << std::endl;
@@ -20,25 +21,18 @@ int main() {
 
     GameObject root("Root");
     auto rootTransform = root.addComponent<Transform2D>();
-    auto &child1 = root.addChild("Child1");
-    auto &child2 = root.addChild("Child2");
 
-    std::shared_ptr<Transform2D> child1Transform = child1.addComponent<Transform2D>();
-    std::shared_ptr<SpriteRenderer> child1Sprite = child1.addComponent<SpriteRenderer>();
-    child1Sprite->loadImage("../assets/Raylib_logo.png");
-    child1Sprite->resizeImage(100, 100);
-    child1Sprite->initTexture();
-    child1Transform->setPosition({0, 0});
-    child1Sprite->getTransform();
 
-    const auto child2Transform = child2.addComponent<Transform2D>();
-    const auto child2Sprite = child2.addComponent<SpriteRenderer>();
+    std::ifstream f("../Data/data.json");
+    nlohmann::json data = nlohmann::json::parse(f);
+    f.close();
 
-    child2Sprite->loadImage("../assets/Raylib_logo.png");
-    child2Sprite->resizeImage(150, 150);
-    child2Sprite->initTexture();
-    child2Transform->setPosition({-100, -100});
-    child2Sprite->getTransform();
+    root.deserialize(data);
+
+    nlohmann::json rootJson = root.serialize();
+    std::ofstream o("../Data/Outdata.json");
+    o << std::setw(4) << rootJson << std::endl;
+    o.close();
 
     SetTargetFPS(60); // Set the game to run at 60 frames-per-second
 
@@ -49,38 +43,10 @@ int main() {
 
         ClearBackground(GRAY); // Clear the screen to white
 
-
-        if (IsKeyDown(KEY_W)) {
-            child1Transform->translate({0, 1});
-        }
-        if (IsKeyDown(KEY_S)) {
-            child1Transform->translate({0, -1});
-        }
-        if (IsKeyDown(KEY_A)) {
-            child1Transform->translate({-1, 0});
-        }
-        if (IsKeyDown(KEY_D)) {
-            child1Transform->translate({1, 0});
-        }
-
-        if (IsKeyDown(KEY_UP)) {
-            child2Transform->translate({0, 1});
-        }
-        if (IsKeyDown(KEY_DOWN)) {
-            child2Transform->translate({0, -1});
-        }
-        if (IsKeyDown(KEY_LEFT)) {
-            child2Transform->translate({-1, 0});
-        }
-        if (IsKeyDown(KEY_RIGHT)) {
-            child2Transform->translate({1, 0});
-        }
-
         // Draw axes using the custom coordinate system
-        DrawLine(0, screenHeight/2, screenWidth, screenHeight/2, RED); // X-axis
-        DrawLine(screenWidth/2, 0, screenWidth/2, screenHeight, GREEN); // Y-axis
-
-
+        
+        DrawLine(0, GetScreenHeight()/2, GetScreenWidth(), GetScreenHeight()/2, RED); // X-axis
+        DrawLine(GetScreenWidth()/2, 0, GetScreenWidth()/2, GetScreenHeight(), GREEN); // Y-axis
         root.update();
 
         EndDrawing();

@@ -12,6 +12,9 @@ public:
     SpriteRenderer(); 
     ~SpriteRenderer() override;
 
+    nlohmann::json serialize() override;
+    void deserialize(const nlohmann::json& json) override;
+
     void loadImage(const std::string& filename);
     void resizeImage(int width, int height, bool useNearestNeighbour = false);
     void setImage(const Image& image);
@@ -25,7 +28,7 @@ public:
     void setRotation(const float rotation) { this->rotation = rotation; }
 
     void update() override;
-    void draw() const;
+    void draw();
     void getTransform() const;
     
 
@@ -37,4 +40,6 @@ protected:
     float rotation = 0.0f;
     Image image{};
     Vector2 size{};
+    bool isTextureInitialized = false;
+    std::string filename;
 };

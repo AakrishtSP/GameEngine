@@ -9,6 +9,9 @@ public:
     Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(0), worldPosition(), worldRotation(0) {
     }
 
+    nlohmann::json serialize() override;
+    void deserialize(const nlohmann::json &json) override;
+
     [[nodiscard]] Vector2 getPosition() const { return position; }
     void setPosition(const Vector2 &position) { this->position = position; }
     [[nodiscard]] float getRotation() const { return rotation; }

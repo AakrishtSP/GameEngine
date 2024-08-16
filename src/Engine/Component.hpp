@@ -12,9 +12,19 @@ public:
     GameObject* getOwner() const { return owner; }
     void setActive(bool active) { isActive = active; }
 
+    virtual nlohmann::json serialize() {
+        nlohmann::json json;
+        json["componentType"] = "Component";
+        json["isActive"] = isActive;
+        return json;
+    }
+
+    virtual void deserialize(const nlohmann::json& json) {
+        isActive = json["isActive"].get<bool>();
+    }
+
 
 protected:
     bool isActive = true;
     GameObject* owner = nullptr;
 };
-
