@@ -4,7 +4,6 @@
 
 #include "rlgl.h"
 
-
 int main() {
     // Initialization
     constexpr int screenWidth = 1280;

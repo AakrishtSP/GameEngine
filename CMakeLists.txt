@@ -4,15 +4,16 @@ project(GameEngine LANGUAGES CXX)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
+
 # Dependencies
 set(RAYLIB_VERSION 5.0)
 find_package(raylib ${RAYLIB_VERSION} QUIET) # QUIET or REQUIRED
 if (NOT raylib_FOUND) # If there's none, fetch and build raylib
     include(FetchContent)
     FetchContent_Declare(
-            raylib
-            DOWNLOAD_EXTRACT_TIMESTAMP OFF
-            URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
+        raylib
+        DOWNLOAD_EXTRACT_TIMESTAMP OFF
+        URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
     )
     FetchContent_GetProperties(raylib)
     if (NOT raylib_POPULATED) # Have we downloaded raylib yet?
@@ -23,19 +24,30 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
     endif()
 endif()
 
-# Our Project
-# add_executable(${PROJECT_NAME}
-#         src/main.cpp
-#         src/GameObject.cpp
-#         src/Components/Transform2D.cpp
-#         src/Components/SpriteRenderer.cpp)
+set(NLOHMMANN_VERSION 3.11.3)
+find_package(nlohmann_json ${NLOHMMANN_VERSION} QUIET) # QUIET or REQUIRED
+if (NOT nlohmann_json_FOUND) # If there's none, fetch and build nlohmann
+    include(FetchContent)
+    FetchContent_Declare(
+        nlohmann_json
+        DOWNLOAD_EXTRACT_TIMESTAMP OFF
+        URL https://github.com/nlohmann/json/archive/refs/tags/v${NLOHMMANN_VERSION}.tar.gz
+    )
+    FetchContent_GetProperties(nlohmann_json)
+    if (NOT nlohmann_json_POPULATED) # Have we downloaded nlohmann/json.hpp yet?
+        set(FETCHCONTENT_QUIET NO)
+        FetchContent_Populate(nlohmann_json)
+        add_subdirectory(${nlohmann_json_SOURCE_DIR} ${nlohmann_json_BINARY_DIR})
+    endif()
+endif()
 
 # Automatically add all .cpp files in src and subdirectories
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} raylib)
+# Link libraries
+target_link_libraries(${PROJECT_NAME} raylib nlohmann_json::nlohmann_json)
 
 # Web Configurations
 if (PLATFORM STREQUAL "Web")
