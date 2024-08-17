@@ -34,6 +34,8 @@
 *.out
 *.app
 
+.idea/
+
 !.github/
 !.github/workflows/
 !.github/workflows/**

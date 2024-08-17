@@ -25,6 +25,7 @@ public:
         if (it != creators.end()) {
             return it->second();
         }
+        std::cerr << "Component type not found: " << componentType << std::endl;
         return nullptr;
     }
 

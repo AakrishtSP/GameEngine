@@ -109,7 +109,7 @@ void SpriteRenderer::renderUpdate(float renderDeltaTime) {
     if (!transform) {
         getTransform();
     }
-    if(!isTextureInitialized && !image.data && filename != "") {
+    if(!isTextureInitialized && !image.data && !filename.empty()) {
         loadImage(filename);
         resizeImage(size.x, size.y);
     }
