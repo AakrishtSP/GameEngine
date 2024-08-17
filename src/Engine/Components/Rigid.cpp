@@ -1,1 +1,2 @@
-hi
+#include "Rigid.hpp"
+

@@ -1,8 +1,4 @@
-#pragma once
 #include "raylib.h"
-#include "Transform2D.hpp"
-#include "SpriteRenderer.hpp"
-#include "./Component.hpp"
 
 class RigidBody
 {
@@ -25,6 +21,8 @@ public:
     Vector2 getvel()const {return velocity;}
     Vector2 getacc()const {return acceleration;}
     double getmass()const {return mass;}
+    double getWidth() const {return width;}
+    double getHeight() const {return height;}
 
     void setPos(Vector2 pos){position = pos;}
     void setVel(Vector2 vel){velocity = vel;}
@@ -51,3 +49,35 @@ void applyForce(RigidBody &body, Vector2 force){
     newAcceleration.y += force.y / body.getmass();
 }
 
+
+int main() {
+    int screenHeight = 700;
+    int screenWidth = 1200;
+    InitWindow(screenWidth, screenHeight, "RigidBody Example");
+
+    RigidBody box(1.0, 50.0, 50.0); 
+    box.setPos({screenWidth / 2.0f, screenHeight / 2.0f});  
+
+    Vector2 gravity = {0, 1.0f};
+
+    SetTargetFPS(60);
+
+    while (!WindowShouldClose()) {
+        double deltaTime = GetFrameTime();
+
+        applyForce(box, gravity);
+
+        UpdateRigidBody(box, deltaTime);
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawRectangle(box.getpos().x, box.getpos().y, box.getWidth(), box.getHeight(), BLUE);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
+
+    return 0;
+}
