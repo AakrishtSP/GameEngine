@@ -1,4 +1,6 @@
 ### C++ template
+*
+
 # Prerequisites
 *.d
 
@@ -32,9 +34,9 @@
 *.out
 *.app
 
-build/
-build/**
-cmake-build-debug/
+!.github/
+!.github/workflows/
+!.github/workflows/**
 !src/
 !src/**
 !CMakeLists.txt
