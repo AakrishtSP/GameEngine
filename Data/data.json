@@ -26,13 +26,7 @@
                         0.0
                     ],
                     "rotation": 0.0,
-                    "scale": 1.0,
-                    "worldPosition": [
-                        0.0,
-                        0.0
-                    ],
-                    "worldRotation": 0.0,
-                    "worldScale": 0.0
+                    "scale": 1.0
                 }
             ],
             "name": "Child1"
@@ -63,13 +57,7 @@
                         -100.0
                     ],
                     "rotation": 0.0,
-                    "scale": 1.0,
-                    "worldPosition": [
-                        0.0,
-                        0.0
-                    ],
-                    "worldRotation": 0.0,
-                    "worldScale": 0.0
+                    "scale": 1.0
                 }
             ],
             "name": "Child2"
@@ -84,13 +72,7 @@
                 0.0
             ],
             "rotation": 0.0,
-            "scale": 1.0,
-            "worldPosition": [
-                0.0,
-                0.0
-            ],
-            "worldRotation": 0.0,
-            "worldScale": 0.0
+            "scale": 1.0
         }
     ],
     "name": "Root"

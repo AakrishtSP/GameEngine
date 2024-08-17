@@ -5,6 +5,9 @@
 #include <thread>
 #include "Engine/Base.hpp"
 
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
+
 // #include "rlgl.h"
 
 std::mutex renderMutex; // Mutex for synchronizing access to rendering
@@ -18,9 +21,8 @@ int main() {
     // Initialization
     constexpr int screenWidth = 1280;
     constexpr int screenHeight = 720;
-    SetTraceLogLevel(LOG_WARNING);
+    // SetTraceLogLevel(LOG_WARNING);
 
-    // SetTraceLogLevel(LOG_TRACE);
     registerComponents();
 
     const std::filesystem::path currentPath = std::filesystem::current_path();
@@ -44,6 +46,7 @@ int main() {
 
     float accumulatedPhysicsTime = 0.0f;
 
+    bool showMessageBox = false;
 
     std::ifstream f("../Data/data.json");
     nlohmann::json data = nlohmann::json::parse(f);
@@ -69,7 +72,7 @@ int main() {
             while (accumulatedPhysicsTime >= physicsUpdateInterval) {
                 std::lock_guard<std::mutex> lock(physicsMutex);
                 root.physicsUpdate(physicsUpdateInterval);
-                std::cout << "Physics update: " << physicsUpdateInterval << std::endl;
+                // std::cout << "Physics update: " << physicsUpdateInterval << std::endl;
                 accumulatedPhysicsTime -= physicsUpdateInterval;
             }
 
@@ -85,15 +88,16 @@ int main() {
 
             if (mainThreadElapsed >= mainUpdateInterval) {
                 root.update(mainUpdateInterval);
-                std::cout << "Main update: " << mainUpdateInterval << std::endl;
+                // std::cout << "Main update: " << mainUpdateInterval << std::endl;
                 lastMainThreadUpdateTime = now;
             }
 
             std::this_thread::sleep_for(milliseconds(1)); // Sleep to avoid busy-waiting
         }
     });
-    // Main thread update loop
 
+
+    // Render thread update loop
     while (!WindowShouldClose()) {
         auto now = high_resolution_clock::now();
         auto elapsed = duration<float>(now - lastRenderTime).count();
@@ -105,10 +109,23 @@ int main() {
             DrawLine(0, GetScreenHeight() / 2, GetScreenWidth(), GetScreenHeight() / 2, RED); // X-axis
             DrawLine(GetScreenWidth() / 2, 0, GetScreenWidth() / 2, GetScreenHeight(), GREEN); // Y-axis
 
+
+            if (GuiButton((Rectangle){ 24, 24, 120, 30 }, "#191#Show Message")) showMessageBox = true;
+
+            if (showMessageBox)
+            {
+                int result = GuiMessageBox((Rectangle){ 85, 70, 250, 100 },
+                    "#191#Message Box", "Hi! This is a message!", "Nice;Cool");
+
+                if (result >= 0) showMessageBox = false;
+            }
+
+
+
             // Update render components
             std::lock_guard<std::mutex> lock(renderMutex);
             root.renderUpdate(renderUpdateInterval);
-            std::cout << "Render update: " << renderUpdateInterval << std::endl;
+            // std::cout << "Render update: " << renderUpdateInterval << std::endl;
 
             lastRenderTime = now;
         }
@@ -129,40 +146,6 @@ int main() {
     if (renderThread.joinable()) {
         renderThread.join();
     }
-
-    // while (!WindowShouldClose()) // Detect window close button or ESC key
-    // {
-    //     root.update(GetFrameTime());
-
-    //     auto now = high_resolution_clock::now();
-    //     auto elapsed = duration<float>(now - lastRenderTime).count();
-
-    //     // Update physics at 120 FPS
-    //     auto physicsElapsed = duration<float>(now - lastPhysicsTime).count();
-    //     accumulatedPhysicsTime += physicsElapsed;
-    //     lastPhysicsTime = now;
-
-    //     while (accumulatedPhysicsTime >= physicsUpdateInterval) {
-    //         root.physicsUpdate(physicsUpdateInterval);
-    //         accumulatedPhysicsTime -= physicsUpdateInterval;
-    //     }
-
-    //     // Render at 60 FPS
-    //     if (elapsed >= renderUpdateInterval) {
-    //         BeginDrawing();
-    //         ClearBackground(GRAY); // Clear the screen to gray
-    //         DrawLine(0, GetScreenHeight()/2, GetScreenWidth(), GetScreenHeight()/2, RED); // X-axis
-    //         DrawLine(GetScreenWidth()/2, 0, GetScreenWidth()/2, GetScreenHeight(), GREEN); // Y-axis
-
-    //         // Update render components
-    //         root.renderUpdate(elapsed);
-
-    //         EndDrawing();
-    //         lastRenderTime = now;
-    //     }
-
-    //     EndDrawing();
-    // }
 
     // De-Initialization
     CloseWindow(); // Close window and OpenGL context

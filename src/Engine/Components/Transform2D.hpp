@@ -6,7 +6,7 @@
 class Transform2D final : public Component
 {
 public:
-    Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(0), worldPosition(), worldRotation(0) {
+    Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(1), worldPosition(), worldRotation(0) {
     }
 
     nlohmann::json serialize() override;
@@ -18,7 +18,7 @@ public:
     void setRotation(const float rotation) { this->rotation = rotation; }
     [[nodiscard]] float getScale() const { return scale; }
     void setScale(const float &scale) { this->scale = scale; }
-
+    
     [[nodiscard]] Vector2 getWorldPosition();
     [[nodiscard]] float getWorldRotation();
     [[nodiscard]] float getWorldScale();
