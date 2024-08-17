@@ -28,7 +28,7 @@ public:
 
     [[nodiscard]] Vector2 getGamePosition() const;
 
-    void update() override;
+    void update(float deltaTime) override;
 
 protected:
     Vector2 position;

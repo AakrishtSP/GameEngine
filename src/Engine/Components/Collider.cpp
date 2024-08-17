@@ -8,7 +8,7 @@ Collider::~Collider()
 {
 }
 
-void Collider::update()
+void Collider::update(float deltaTime)
 {
 }
 

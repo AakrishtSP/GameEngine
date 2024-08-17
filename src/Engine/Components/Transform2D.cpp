@@ -44,10 +44,8 @@ inline void Transform2D::calculateWorldPosition() {
 }
 
 
-void Transform2D::update() {
+void Transform2D::update(float deltaTime) {
     calculateWorldPosition();
-    // std::cout << "World Position: " << worldPosition.x << ", " << worldPosition.y << std::endl;
-    // std::cout << "World Rotation: " << worldRotation << std::endl;
 }
 
 Vector2 Transform2D::getGamePosition() const {

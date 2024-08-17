@@ -102,7 +102,7 @@ void SpriteRenderer::initTexture() {
     }
 }
 
-void SpriteRenderer::update() {
+void SpriteRenderer::update(float deltaTime) {
     if (!isActive) {
         return;
     }
@@ -135,7 +135,7 @@ void SpriteRenderer::draw() {
     }
 }
 
-void SpriteRenderer::getTransform() const {
+void SpriteRenderer::getTransform() {
     if (!owner) {
         std::cerr << "owner not found" << std::endl;
         return;

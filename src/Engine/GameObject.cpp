@@ -93,9 +93,10 @@ void GameObject::deserialize(const nlohmann::json &json) {
 
 void GameObject::update() {
     // Iterate over the original components
+    float deltaTime = GetFrameTime();
     for (auto it = components.begin(); it != components.end();) {
         if (it->second) {
-            it->second->update();
+            it->second->update(deltaTime);
             ++it;
         } else {
             // Handle case where component has been removed or is invalid

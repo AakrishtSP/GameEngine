@@ -7,7 +7,7 @@ class GameObject;
 class Component {
 public:
     virtual ~Component() = default;
-    virtual void update() = 0;
+    virtual void update(float deltaTime) = 0;
     void setOwner(GameObject* owner) { this->owner = owner; }
     GameObject* getOwner() const { return owner; }
     void setActive(bool active) { isActive = active; }

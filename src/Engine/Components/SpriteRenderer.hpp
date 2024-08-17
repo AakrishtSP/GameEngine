@@ -27,13 +27,13 @@ public:
     void setScale(const float scale) { this->scale = scale; }
     void setRotation(const float rotation) { this->rotation = rotation; }
 
-    void update() override;
+    void update(float deltaTime) override;
     void draw();
-    void getTransform() const;
+    void getTransform();
     
 
 protected:
-    mutable std::shared_ptr<Transform2D> transform = nullptr;
+    std::shared_ptr<Transform2D> transform = nullptr;
     float scale = 1.0f;
     Vector2 offset{};
     Texture2D texture{};

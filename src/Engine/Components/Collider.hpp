@@ -13,7 +13,7 @@ public:
     Collider();
     ~Collider();
 
-    void update() override;
+    void update(float deltaTime) override;
     Vector2 support(Circle &circle, Vector2 &direction);
     Vector2 support(Rectangle &rectangle, Vector2 &direction);
     Vector2 support(Polygon &polygon, Vector2 &direction);
