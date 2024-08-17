@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "Transform2D.hpp"
 #include "SpriteRenderer.hpp"
-#include "./Component.hpp"
+#include "../Component.hpp"
 
 class RigidBody
 {
