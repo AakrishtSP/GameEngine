@@ -50,4 +50,4 @@ void applyForce(RigidBody &body, Vector2 force){
     newAcceleration.x += force.x / body.getmass();
     newAcceleration.y += force.y / body.getmass();
 }
-
+a
