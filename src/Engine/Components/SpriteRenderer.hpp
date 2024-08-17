@@ -1,4 +1,6 @@
 #pragma once
+#include <mutex>
+#include<thread>
 #include "../Component.hpp"
 #include "Transform2D.hpp"
 
@@ -45,4 +47,6 @@ protected:
     Vector2 size{};
     bool isTextureInitialized = false;
     std::string filename;
+
+    std::mutex spriteMutex;
 };

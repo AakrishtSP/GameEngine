@@ -35,6 +35,9 @@ void SpriteRenderer::deserialize(const nlohmann::json& json)
     // // If the texture needs to be loaded from the file
     // loadImage(filename.c_str());
     // initTexture();
+    loadImage(filename);
+    resizeImage(size.x, size.y);
+    initTexture();
 }
 
 SpriteRenderer::SpriteRenderer() : offset(Vector2()), size(Vector2()) {
@@ -48,6 +51,7 @@ SpriteRenderer::~SpriteRenderer() {
 }
 
 void SpriteRenderer::loadImage(const std::string &filename) {
+    std::lock_guard<std::mutex> lock(spriteMutex);
     struct stat buffer{};
     if (stat(filename.c_str(), &buffer) != 0) {
         std::cerr << "File does not exist: " << filename << std::endl;
@@ -72,6 +76,7 @@ void SpriteRenderer::resizeImage(const int width, const int height, const bool u
 }
 
 void SpriteRenderer::setImage(const Image &image) {
+    std::lock_guard<std::mutex> lock(spriteMutex);
     if (this->image.data) {
         UnloadImage(this->image);
     }
@@ -80,6 +85,7 @@ void SpriteRenderer::setImage(const Image &image) {
 }
 
 void SpriteRenderer::setTexture(const Texture2D &texture) {
+    std::lock_guard<std::mutex> lock(spriteMutex);
     if (this->texture.id) {
         UnloadTexture(this->texture);
     }
@@ -103,6 +109,7 @@ void SpriteRenderer::initTexture() {
 }
 
 void SpriteRenderer::renderUpdate(float renderDeltaTime) {
+    // std::lock_guard<std::mutex> lock(spriteMutex);
     if (!isActive) {
         return;
     }
@@ -128,8 +135,8 @@ void SpriteRenderer::draw() {
         const float worldRotation = transform->getWorldRotation();
         const float worldScale = transform->getWorldScale();
 
-        DrawTextureEx(texture, position + offset - size * scale * worldScale / 2, worldRotation + rotation, scale,
-                      {255, 255, 255, 255});
+        DrawTextureEx(texture, position + offset - size * scale * worldScale / 2, worldRotation + rotation, scale, WHITE);
+        // std::cout << "Drawing sprite at: " << position.x << ", " << position.y << std::endl;
     } else {
         std::cerr << "Transform not available for drawing." << std::endl;
     }

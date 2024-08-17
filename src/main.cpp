@@ -5,22 +5,13 @@
 #include <thread>
 #include "Engine/Base.hpp"
 
-#include "rlgl.h"
+// #include "rlgl.h"
 
 std::mutex renderMutex; // Mutex for synchronizing access to rendering
 std::mutex physicsMutex; // Mutex for synchronizing access to physics updates
 
-void updatePhysics(GameObject &root, float fixedDeltaTime) {
-    std::lock_guard<std::mutex> lock(physicsMutex);
-    root.physicsUpdate(fixedDeltaTime);
-    std::cout << "Physics update: " << fixedDeltaTime << std::endl;
-}
 
-void updateRender(GameObject &root, float deltaTime) {
-    std::lock_guard<std::mutex> lock(renderMutex);
-    root.renderUpdate(deltaTime);
-    std::cout << "Render update: " << deltaTime << std::endl;
-}
+void updateRender(GameObject *root, float deltaTime) {}
 
 int main() {
     using namespace std::chrono;
@@ -28,6 +19,8 @@ int main() {
     constexpr int screenWidth = 1280;
     constexpr int screenHeight = 720;
     SetTraceLogLevel(LOG_WARNING);
+
+    // SetTraceLogLevel(LOG_TRACE);
     registerComponents();
 
     const std::filesystem::path currentPath = std::filesystem::current_path();
@@ -63,7 +56,7 @@ int main() {
     o << std::setw(4) << rootJson << std::endl;
     o.close();
 
-    SetTargetFPS(60); // Set the game to run at 60 frames-per-second
+    // SetTargetFPS(60); // Set the game to run at 60 frames-per-second
 
     // Physics update thread
     std::thread physicsThread([&]() {
@@ -74,7 +67,9 @@ int main() {
             lastPhysicsTime = now;
 
             while (accumulatedPhysicsTime >= physicsUpdateInterval) {
-                updatePhysics(root, physicsUpdateInterval);
+                std::lock_guard<std::mutex> lock(physicsMutex);
+                root.physicsUpdate(physicsUpdateInterval);
+                std::cout << "Physics update: " << physicsUpdateInterval << std::endl;
                 accumulatedPhysicsTime -= physicsUpdateInterval;
             }
 
@@ -82,44 +77,48 @@ int main() {
         }
     });
 
-    // Main thread update loop
-    while (!WindowShouldClose()) {
-        auto now = high_resolution_clock::now();
-        auto mainThreadElapsed = duration<float>(now - lastMainThreadUpdateTime).count();
-
-        if (mainThreadElapsed >= mainUpdateInterval) {
-            root.update(mainUpdateInterval);
-            std::cout << "Main update: " << mainUpdateInterval << std::endl;
-            lastMainThreadUpdateTime = now;
-        }
-
-        std::this_thread::sleep_for(milliseconds(1)); // Sleep to avoid busy-waiting
-    }
     // Rendering thread
     std::thread renderThread([&]() {
         while (!WindowShouldClose()) {
             auto now = high_resolution_clock::now();
-            auto elapsed = duration<float>(now - lastRenderTime).count();
+            auto mainThreadElapsed = duration<float>(now - lastMainThreadUpdateTime).count();
 
-            if (elapsed >= renderUpdateInterval) {
-                BeginDrawing();
-                ClearBackground(GRAY); // Clear the screen to gray
-
-                // Update render components
-                updateRender(root, renderUpdateInterval);
-
-                EndDrawing();
-                lastRenderTime = now;
+            if (mainThreadElapsed >= mainUpdateInterval) {
+                root.update(mainUpdateInterval);
+                std::cout << "Main update: " << mainUpdateInterval << std::endl;
+                lastMainThreadUpdateTime = now;
             }
 
             std::this_thread::sleep_for(milliseconds(1)); // Sleep to avoid busy-waiting
         }
     });
+    // Main thread update loop
+
+    while (!WindowShouldClose()) {
+        auto now = high_resolution_clock::now();
+        auto elapsed = duration<float>(now - lastRenderTime).count();
+
+        BeginDrawing();
+        if (elapsed >= renderUpdateInterval) {
+            ClearBackground(GRAY); // Clear the screen to gray
+
+            DrawLine(0, GetScreenHeight() / 2, GetScreenWidth(), GetScreenHeight() / 2, RED); // X-axis
+            DrawLine(GetScreenWidth() / 2, 0, GetScreenWidth() / 2, GetScreenHeight(), GREEN); // Y-axis
+
+            // Update render components
+            std::lock_guard<std::mutex> lock(renderMutex);
+            root.renderUpdate(renderUpdateInterval);
+            std::cout << "Render update: " << renderUpdateInterval << std::endl;
+
+            lastRenderTime = now;
+        }
+        EndDrawing();
+
+        // std::this_thread::sleep_for(milliseconds(1)); // Sleep to avoid busy-waiting
+    }
 
     while (!WindowShouldClose())
         ;
-
-    
 
 
     // Join threads
