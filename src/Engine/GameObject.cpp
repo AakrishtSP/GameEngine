@@ -91,9 +91,8 @@ void GameObject::deserialize(const nlohmann::json &json) {
     }
 }
 
-void GameObject::update() {
+void GameObject::update(float deltaTime) {
     // Iterate over the original components
-    float deltaTime = GetFrameTime();
     for (auto it = components.begin(); it != components.end();) {
         if (it->second) {
             it->second->update(deltaTime);
@@ -107,7 +106,53 @@ void GameObject::update() {
     // Iterate over the original children
     for (auto it = children.begin(); it != children.end();) {
         if (*it) {
-            (*it)->update();
+            (*it)->update(deltaTime);
+            ++it;
+        } else {
+            it = children.erase(it);
+        }
+    }
+}
+
+void GameObject::physicsUpdate(float fixedDeltaTime) {
+    // Iterate over the original components
+    for (auto it = components.begin(); it != components.end();) {
+        if (it->second) {
+            it->second->physicsUpdate(fixedDeltaTime);
+            ++it;
+        } else {
+            // Handle case where component has been removed or is invalid
+            it = components.erase(it);
+        }
+    }
+
+    // Iterate over the original children
+    for (auto it = children.begin(); it != children.end();) {
+        if (*it) {
+            (*it)->physicsUpdate(fixedDeltaTime);
+            ++it;
+        } else {
+            it = children.erase(it);
+        }
+    }
+}
+
+void GameObject::renderUpdate(float renderDeltaTime) {
+    // Iterate over the original components
+    for (auto it = components.begin(); it != components.end();) {
+        if (it->second) {
+            it->second->renderUpdate(renderDeltaTime);
+            ++it;
+        } else {
+            // Handle case where component has been removed or is invalid
+            it = components.erase(it);
+        }
+    }
+
+    // Iterate over the original children
+    for (auto it = children.begin(); it != children.end();) {
+        if (*it) {
+            (*it)->renderUpdate(renderDeltaTime);
             ++it;
         } else {
             it = children.erase(it);

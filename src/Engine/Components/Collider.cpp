@@ -11,6 +11,12 @@ Collider::~Collider()
 void Collider::update(float deltaTime)
 {
 }
+void Collider::physicsUpdate(float fixedDeltaTime)
+{
+}
+void Collider::renderUpdate(float renderDeltaTime)
+{
+}
 
 Vector2 Collider::support(Circle &circle, Vector2 &direction)
 {

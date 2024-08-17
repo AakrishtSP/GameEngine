@@ -102,7 +102,7 @@ void SpriteRenderer::initTexture() {
     }
 }
 
-void SpriteRenderer::update(float deltaTime) {
+void SpriteRenderer::renderUpdate(float renderDeltaTime) {
     if (!isActive) {
         return;
     }
@@ -123,7 +123,7 @@ void SpriteRenderer::draw() {
     if (!isTextureInitialized) {
         initTexture();
     }
-    if (transform ) {
+    if (transform) {
         const Vector2 position = transform->getGamePosition();
         const float worldRotation = transform->getWorldRotation();
         const float worldScale = transform->getWorldScale();

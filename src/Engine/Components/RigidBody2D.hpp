@@ -15,6 +15,9 @@ public:
     void deserialize(const nlohmann::json& json) override;
 
     void update(float deltaTime) override;
+    void physicsUpdate(float fixedDeltaTime) override;
+    void renderUpdate(float renderDeltaTime) override{};
+
     void setVelocity(const Vector2& velocity) { this->velocity = velocity; }
     void setAcceleration(const Vector2& acceleration) { this->acceleration = acceleration; }
     void setForce(const Vector2& force) { this->force = force; }

@@ -46,7 +46,7 @@ int main() {
         
         DrawLine(0, GetScreenHeight()/2, GetScreenWidth(), GetScreenHeight()/2, RED); // X-axis
         DrawLine(GetScreenWidth()/2, 0, GetScreenWidth()/2, GetScreenHeight(), GREEN); // Y-axis
-        root.update();
+        root.update(GetFrameTime());
 
         EndDrawing();
     }

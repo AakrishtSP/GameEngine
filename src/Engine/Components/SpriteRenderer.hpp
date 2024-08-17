@@ -15,6 +15,10 @@ public:
     nlohmann::json serialize() override;
     void deserialize(const nlohmann::json& json) override;
 
+    void renderUpdate(float renderDeltaTime) override;
+    void update(float deltaTime) override{};
+    void physicsUpdate(float fixedDeltaTime) override {};
+
     void loadImage(const std::string& filename);
     void resizeImage(int width, int height, bool useNearestNeighbour = false);
     void setImage(const Image& image);
@@ -27,7 +31,6 @@ public:
     void setScale(const float scale) { this->scale = scale; }
     void setRotation(const float rotation) { this->rotation = rotation; }
 
-    void update(float deltaTime) override;
     void draw();
     void getTransform();
     

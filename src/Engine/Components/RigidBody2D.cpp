@@ -31,6 +31,11 @@ void RigidBody2D::update(float deltaTime)
     // Update the RigidBody2D component based on the current state
 }
 
+void RigidBody2D::physicsUpdate(float fixedDeltaTime)
+{
+    
+}
+
 void RigidBody2D::getTransform()
 {
     if (!owner) {

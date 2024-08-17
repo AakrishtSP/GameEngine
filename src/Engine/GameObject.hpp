@@ -35,7 +35,9 @@ public:
     nlohmann::json serialize();
     void deserialize(const nlohmann::json &json);
 
-    void update();
+    void update(float deltaTime);
+    void physicsUpdate(float fixedDeltaTime);
+    void renderUpdate(float renderDeltaTime);
 
     ~GameObject();
 

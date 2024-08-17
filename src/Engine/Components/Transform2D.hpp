@@ -18,17 +18,23 @@ public:
     void setRotation(const float rotation) { this->rotation = rotation; }
     [[nodiscard]] float getScale() const { return scale; }
     void setScale(const float &scale) { this->scale = scale; }
-    [[nodiscard]] Vector2 getWorldPosition() const { return worldPosition; }
-    [[nodiscard]] float getWorldRotation() const { return worldRotation; }
-    [[nodiscard]] float getWorldScale() const { return worldScale; }
+
+    [[nodiscard]] Vector2 getWorldPosition();
+    [[nodiscard]] float getWorldRotation();
+    [[nodiscard]] float getWorldScale();
+
     void translate(const Vector2 &translation) { position = position + translation; }
     void rotate(const float rotation) { this->rotation += rotation; }
 
     void calculateWorldPosition();
 
+    void update(float deltaTime) override{};
+    void physicsUpdate(float fixedDeltaTime) override{};
+    void renderUpdate(float renderDeltaTime) override{};
+
     [[nodiscard]] Vector2 getGamePosition() const;
 
-    void update(float deltaTime) override;
+    // void update(float deltaTime) override;
 
 protected:
     Vector2 position;

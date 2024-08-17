@@ -43,11 +43,6 @@ inline void Transform2D::calculateWorldPosition() {
     }
 }
 
-
-void Transform2D::update(float deltaTime) {
-    calculateWorldPosition();
-}
-
 Vector2 Transform2D::getGamePosition() const {
     // Get the half of the screen width and height
     float halfScreenWidth = GetScreenWidth() / 2.0f;
@@ -58,4 +53,20 @@ Vector2 Transform2D::getGamePosition() const {
     float gamePosY = halfScreenHeight - worldPosition.y;
 
     return Vector2{gamePosX, gamePosY};
+}
+
+
+Vector2 Transform2D::getWorldPosition() {
+    calculateWorldPosition();
+    return worldPosition;
+}
+
+float Transform2D::getWorldRotation() {
+    calculateWorldPosition();
+    return worldRotation;
+}
+
+float Transform2D::getWorldScale() {
+    calculateWorldPosition();
+    return worldScale;
 }
