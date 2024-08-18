@@ -3,10 +3,14 @@
 name: CMake on multiple platforms
 
 on:
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
   push:
-    branches: [ "master" ]
+    branches: [ "*" ]  # Trigger on push to any branch
   pull_request:
-    branches: [ "master" ]
+    branches: [ "*" ]  # Trigger on pull request to any branch
 
 jobs:
   build:
