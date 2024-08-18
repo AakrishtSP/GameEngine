@@ -20,7 +20,8 @@ void Editor::init() {
 void Editor::draw() {
     // Draw the hierarchy
     float offsetY = 10.0f;
-    Rectangle win = {0, 0, 400, GetScreenHeight()};
+    float screenHeight = GetScreenHeight();
+    Rectangle win = {0, 0, 400, screenHeight};
     GuiWindowBox(win, "hello");
     drawHierarchy(GameEngine::getInstance().getRoot(), win.x+10.0f, win.y+30.0f, offsetY);
 
@@ -32,9 +33,10 @@ void Editor::drawInspector(std::shared_ptr<GameObject> gameObject) {
     if (!gameObject) return; // Check for null pointers
 
     float screenWidth = GetScreenWidth();
+    float screenHeight = GetScreenHeight();
     float windowWidth = 400;
 
-    Rectangle win = {screenWidth-windowWidth, 0, windowWidth, GetScreenHeight()};
+    Rectangle win = {screenWidth-windowWidth, 0, windowWidth, screenHeight};
     GuiWindowBox(win, "Inspector");
     
     Rectangle rect = {win.x +10 , win.y + 30, win.width - 20, 20};
