@@ -27,13 +27,45 @@ void RigidBody2D::deserialize(const nlohmann::json& json)
 
 void RigidBody2D::update(float deltaTime)
 {
-    // TODO: Implement update logic for RigidBody2D
-    // Update the RigidBody2D component based on the current state
+    velocity.x += acceleration.x * deltaTime;
+    velocity.y += acceleration.y * deltaTime;
+
+    Vector2 currentPosition = transform->getPosition();
+    currentPosition.x += velocity.x * deltaTime;
+    currentPosition.y += velocity.y * deltaTime;
+
+    velocity.x += (force.x / mass) * deltaTime;
+    velocity.y += (force.y / mass) * deltaTime;
+
+    transform->setPosition(currentPosition);
+
+    force.x = 0.0f;
+    force.y = 0.0f;
 }
 
 void RigidBody2D::physicsUpdate(float fixedDeltaTime)
 {
+    velocity.x += acceleration.x * fixedDeltaTime;
+    velocity.y += acceleration.y * fixedDeltaTime;
+
+    Vector2 gravity = {0, -9.8f};
+    velocity.x += gravity.x * fixedDeltaTime;
+    velocity.y += gravity.y * fixedDeltaTime;
     
+    velocity.x += (force.x / mass) * fixedDeltaTime;
+    velocity.y += (force.y / mass) * fixedDeltaTime;
+
+    Vector2 currentPosition = transform->getPosition();
+    currentPosition.x += velocity.x * fixedDeltaTime;
+    currentPosition.y += velocity.y * fixedDeltaTime;
+
+    velocity.x += (force.x / mass) * fixedDeltaTime;
+    velocity.y += (force.y / mass) * fixedDeltaTime;
+
+    transform->setPosition(currentPosition);
+
+    force.x = 0.0f;
+    force.y = 0.0f;
 }
 
 void RigidBody2D::getTransform()
