@@ -81,3 +81,10 @@ inline Vector2 Reflect(const Vector2& vec, const Vector2& normal) {
     return vec - 2.0f * DotProduct(vec, normal) * normal;
 }
 
+//Rotate a Vector2 'vec' around a rotationPoint by `angle` radians
+inline void RotatePoint(Vector2& vec, Vector2 rotationPoint, float rotationAngle){
+    float x = vec.x - rotationPoint.x;
+    float y = vec.y - rotationPoint.y;
+    vec.x = x * cos(rotationAngle) - y * sin(rotationAngle) + rotationPoint.x;
+    vec.y = x * sin(rotationAngle) + y * cos(rotationAngle) + rotationPoint.y;
+}
