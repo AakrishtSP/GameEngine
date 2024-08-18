@@ -8,7 +8,8 @@ void Collider::update(float deltaTime) {}
 
 void Collider::physicsUpdate(float fixedDeltaTime) {}
 
-Vector2 Collider::supportFunction(Circle &circle, Vector2 &direction) {
+Vector2 Collider::supportFunction(Circle &circle, Vector2 &direction)
+{
     Vector2 dir = Normalize(direction);
     return circle.center + dir * circle.radius;
 }
