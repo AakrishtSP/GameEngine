@@ -8,7 +8,7 @@
 #include "RigidBody2D.hpp"
 
 // Registering components
-void registerComponents() {
+void inline registerComponents() {
     auto& factory = ComponentFactory::getInstance();
     factory.registerComponent<Transform2D>("Transform2D");
     factory.registerComponent<SpriteRenderer>("SpriteRenderer");
