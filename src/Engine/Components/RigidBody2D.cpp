@@ -4,6 +4,7 @@ nlohmann::json RigidBody2D::serialize()
 {
     nlohmann::json json;
     json["componentType"] = "RigidBody2D";
+    json["isMoveable"] = isMoveable;
     json["isActive"] = isActive;
     json["velocity"] = {velocity.x, velocity.y};
     json["acceleration"] = {acceleration.x, acceleration.y};
@@ -13,7 +14,8 @@ nlohmann::json RigidBody2D::serialize()
 
 void RigidBody2D::deserialize(const nlohmann::json& json)
 {
-    isActive = json["isActive"].get<bool>();
+    isActive = json["isActvve"].get<bool>();
+    isMoveable = json["isMoveable"].get<bool>();
 
     velocity.x = json["velocity"][0].get<float>();
     velocity.y = json["velocity"][1].get<float>();
@@ -27,6 +29,8 @@ void RigidBody2D::deserialize(const nlohmann::json& json)
 
 void RigidBody2D::update(float deltaTime)
 {
+    if(!isMoveable) return;
+
     velocity.x += acceleration.x * deltaTime;
     velocity.y += acceleration.y * deltaTime;
 
@@ -45,6 +49,9 @@ void RigidBody2D::update(float deltaTime)
 
 void RigidBody2D::physicsUpdate(float fixedDeltaTime)
 {
+
+    if(!isMoveable) return;
+
     velocity.x += acceleration.x * fixedDeltaTime;
     velocity.y += acceleration.y * fixedDeltaTime;
 
@@ -67,6 +74,7 @@ void RigidBody2D::physicsUpdate(float fixedDeltaTime)
     force.x = 0.0f;
     force.y = 0.0f;
 }
+
 
 void RigidBody2D::getTransform()
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include<cfloat>
 #include "raylib.h"
 #include "Transform2D.hpp"
 #include "Collider.hpp"
@@ -14,9 +15,14 @@ protected:
     Vector2 acceleration;
     Vector2 force;
     float mass;
+    bool isMoveable;
 
 public:
-    RigidBody2D() : velocity({0, 0}), acceleration({0, 0}), force({0, 0}) {}
+    RigidBody2D(bool isMoveable=true) : velocity({0, 0}), acceleration({0, 0}), force({0, 0}), isMoveable(isMoveable) {
+        if(!isMoveable){
+            mass = FLT_MAX;
+        }
+    }
     ~RigidBody2D() override = default;
 
     nlohmann::json serialize() override;
@@ -29,6 +35,11 @@ public:
     void setVelocity(const Vector2& velocity) { this->velocity = velocity; }
     void setAcceleration(const Vector2& acceleration) { this->acceleration = acceleration; }
     void setForce(const Vector2& force) { this->force = force; }
+    void setMass(const float mass){
+        if(isMoveable){
+            this->mass = mass;
+        }this->mass = FLT_MAX;
+    }
     void addForce(const Vector2& force) { this->force = this->force + force; }
     [[nodiscard]] Vector2 getVelocity() const { return velocity; }
     [[nodiscard]] Vector2 getAcceleration() const { return acceleration; }
