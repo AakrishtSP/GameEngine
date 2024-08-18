@@ -1,21 +1,19 @@
 #include "RigidBody2D.hpp"
 
-nlohmann::json RigidBody2D::serialize()
-{
+nlohmann::json RigidBody2D::serialize() {
     nlohmann::json json;
     json["componentType"] = "RigidBody2D";
-    json["isMoveable"] = isMoveable;
     json["isActive"] = isActive;
     json["velocity"] = {velocity.x, velocity.y};
     json["acceleration"] = {acceleration.x, acceleration.y};
     json["force"] = {force.x, force.y};
+    json["mass"] = mass;
+    json["isMoveable"] = isMoveable;
     return json;
 }
 
-void RigidBody2D::deserialize(const nlohmann::json& json)
-{
-    isActive = json["isActvve"].get<bool>();
-    isMoveable = json["isMoveable"].get<bool>();
+void RigidBody2D::deserialize(const nlohmann::json &json) {
+    isActive = json["isActive"].get<bool>();
 
     velocity.x = json["velocity"][0].get<float>();
     velocity.y = json["velocity"][1].get<float>();
@@ -25,59 +23,33 @@ void RigidBody2D::deserialize(const nlohmann::json& json)
 
     force.x = json["force"][0].get<float>();
     force.y = json["force"][1].get<float>();
+
+    mass = json["mass"].get<float>();
+    isMoveable = json["isMoveable"].get<bool>();
 }
 
-void RigidBody2D::update(float deltaTime)
-{
-    if(!isMoveable) return;
+void RigidBody2D::update(float deltaTime) {}
 
-    velocity.x += acceleration.x * deltaTime;
-    velocity.y += acceleration.y * deltaTime;
+void RigidBody2D::physicsUpdate(float fixedDeltaTime) {
+    if (!isMoveable) return;
 
-    Vector2 currentPosition = transform->getPosition();
-    currentPosition.x += velocity.x * deltaTime;
-    currentPosition.y += velocity.y * deltaTime;
+    // Apply forces
+    Vector2 acceleration = force / mass;
+    velocity = velocity + acceleration * fixedDeltaTime;
 
-    velocity.x += (force.x / mass) * deltaTime;
-    velocity.y += (force.y / mass) * deltaTime;
+    // Update position (assuming you have a way to update position)
+    if (transform) {
+        Vector2 position = transform->getPosition();
+        position = position + velocity * fixedDeltaTime;
+        transform->setPosition(position);
+    }
 
-    transform->setPosition(currentPosition);
-
-    force.x = 0.0f;
-    force.y = 0.0f;
-}
-
-void RigidBody2D::physicsUpdate(float fixedDeltaTime)
-{
-
-    if(!isMoveable) return;
-
-    velocity.x += acceleration.x * fixedDeltaTime;
-    velocity.y += acceleration.y * fixedDeltaTime;
-
-    Vector2 gravity = {0, -9.8f};
-    velocity.x += gravity.x * fixedDeltaTime;
-    velocity.y += gravity.y * fixedDeltaTime;
-    
-    velocity.x += (force.x / mass) * fixedDeltaTime;
-    velocity.y += (force.y / mass) * fixedDeltaTime;
-
-    Vector2 currentPosition = transform->getPosition();
-    currentPosition.x += velocity.x * fixedDeltaTime;
-    currentPosition.y += velocity.y * fixedDeltaTime;
-
-    velocity.x += (force.x / mass) * fixedDeltaTime;
-    velocity.y += (force.y / mass) * fixedDeltaTime;
-
-    transform->setPosition(currentPosition);
-
-    force.x = 0.0f;
-    force.y = 0.0f;
+    // Clear force
+    force = {0, 0};
 }
 
 
-void RigidBody2D::getTransform()
-{
+void RigidBody2D::getTransform() {
     if (!owner) {
         std::cerr << "owner not found" << std::endl;
         return;
@@ -88,8 +60,7 @@ void RigidBody2D::getTransform()
     }
 }
 
-void RigidBody2D::getCollider()
-{
+void RigidBody2D::getCollider() {
     if (!owner) {
         std::cerr << "owner not found" << std::endl;
         return;

@@ -14,9 +14,11 @@ public:
     GameObject* getOwner() const { return owner; }
     void setActive(bool active) { isActive = active; }
 
+    virtual Rectangle drawInspector(Rectangle& Rectangle) {return Rectangle;}
+
     virtual nlohmann::json serialize() {
         nlohmann::json json;
-        json["componentType"] = "Component";
+        json["componentType"] = name;
         json["isActive"] = isActive;
         return json;
     }
@@ -25,8 +27,11 @@ public:
         isActive = json["isActive"].get<bool>();
     }
 
+    std::string getName() const { return name; }
+
 
 protected:
     bool isActive = true;
+    std::string name = "Component";
     GameObject* owner = nullptr;
 };

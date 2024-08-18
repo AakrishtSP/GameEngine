@@ -1,42 +1,33 @@
 #include "Collider.hpp"
 
-Collider::Collider()
-{
-}
+Collider::Collider() {}
 
-Collider::~Collider()
-{
-}
+Collider::~Collider() {}
 
-void Collider::update(float deltatime)
-{
-}
+void Collider::update(float deltaTime) {}
 
-void Collider::physicsUpdate(float fixedDeltaTime)
-{
-    
-}
+void Collider::physicsUpdate(float fixedDeltaTime) {}
 
-Vector2 Collider::supportFunction(Circle &circle, Vector2 &direction)
-{
+Vector2 Collider::supportFunction(Circle &circle, Vector2 &direction) {
     Vector2 dir = Normalize(direction);
     return circle.center + dir * circle.radius;
 }
 
-Vector2 Collider::supportFunction(const Rectangle& rect, float rotation, const Vector2& direction) {
-
+Vector2 Collider::supportFunction(const Rectangle &rect, float rotation, const Vector2 &direction) {
     Vector2 dir = Normalize(direction);
-    Vector2 vertices[4]= {
-        {rect.x, rect.y},
-        {rect.x + rect.width, rect.y},
-        {rect.x + rect.width, rect.y + rect.height},
-        {rect.x, rect.y + rect.height}
-    };
+
+    // Define the vertices of the rectangle
+    Vector2 vertices[4] = {{rect.x, rect.y},
+                           {rect.x + rect.width, rect.y},
+                           {rect.x + rect.width, rect.y + rect.height},
+                           {rect.x, rect.y + rect.height}};
+
+    // Rotation calculations
     float cosA = cos(rotation);
     float sinA = sin(rotation);
-    
-    // Rotate the vertices
     Vector2 rotationPoint = {rect.x + rect.width / 2, rect.y + rect.height / 2};
+
+    // Rotate each vertex
     for (int i = 0; i < 4; i++) {
         RotatePoint(vertices[i], rotationPoint, rotation);
         /*float x = vertices[i].x - rotationPoint.x;
@@ -45,6 +36,7 @@ Vector2 Collider::supportFunction(const Rectangle& rect, float rotation, const V
         vertices[i].y = x * sinA + y * cosA + rotationPoint.y; */
     }
 
+    // Find the vertex with the maximum dot product
     float maxDot = DotProduct(vertices[0], dir);
     Vector2 returnVertex = vertices[0];
     for (int i = 1; i < 4; i++) {

@@ -6,6 +6,8 @@
 #include <mutex>
 #include <thread>
 #include "Base.hpp"
+#include "Editor.hpp"
+
 
 // #ifndef RAYGUI_IMPLEMENTATION
 // #define RAYGUI_IMPLEMENTATION
@@ -13,9 +15,12 @@
 
 // #include "raygui.h"
 
+
 class GameEngine {
 public:
     static GameEngine& getInstance();
+
+    std::shared_ptr<GameObject> getRoot(){return root;};
 
     void run();
 
@@ -34,7 +39,7 @@ private:
     std::thread physicsThread;
     std::thread logicThread;
 
-    GameObject root;
+    std::shared_ptr<GameObject> root;
 
     float physicsUpdateInterval;
     float renderUpdateInterval;

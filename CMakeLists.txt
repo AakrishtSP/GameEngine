@@ -70,7 +70,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} raylib raygui nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} raylib nlohmann_json::nlohmann_json raygui)
 
 # Web Configurations
 if (PLATFORM STREQUAL "Web")

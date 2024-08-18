@@ -30,7 +30,13 @@ public:
     void addChild(std::shared_ptr<GameObject> child);
     GameObject &addChild(const std::string &name);
 
-    GameObject *getParent() const;
+    GameObject *getParent() const{ return parent; };
+
+    void setParent(GameObject *parent){ this->parent = parent; };
+
+    std::unordered_map<std::type_index, std::shared_ptr<Component>> getComponents() const{ return components; };
+    std::vector<std::shared_ptr<GameObject>> getChildren() const{ return children; };
+
 
     nlohmann::json serialize();
     void deserialize(const nlohmann::json &json);

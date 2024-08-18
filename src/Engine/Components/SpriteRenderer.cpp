@@ -6,7 +6,7 @@
 
 nlohmann::json SpriteRenderer::serialize() { 
     nlohmann::json json;
-    json["componentType"] = "SpriteRenderer";
+    json["componentType"] = name;
     json["isActive"] = isActive;
     json["offset"] = {offset.x, offset.y};
     json["scale"] = scale;
@@ -42,12 +42,15 @@ void SpriteRenderer::deserialize(const nlohmann::json& json)
 
 SpriteRenderer::SpriteRenderer() : offset(Vector2()), size(Vector2()) {
     // getTransform();
+    name = "SpriteRenderer";
     texture = {0};
     image = {};
 };
 
 SpriteRenderer::~SpriteRenderer() {
-    UnloadTexture(texture);
+    if (texture.id) {
+        UnloadTexture(texture);
+    }
 }
 
 void SpriteRenderer::loadImage(const std::string &filename) {
@@ -109,7 +112,7 @@ void SpriteRenderer::initTexture() {
 }
 
 void SpriteRenderer::renderUpdate(float renderDeltaTime) {
-    // std::lock_guard<std::mutex> lock(spriteMutex);
+    std::lock_guard<std::mutex> lock(spriteMutex);
     if (!isActive) {
         return;
     }

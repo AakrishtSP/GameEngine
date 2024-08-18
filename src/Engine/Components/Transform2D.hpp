@@ -6,8 +6,9 @@
 class Transform2D final : public Component
 {
 public:
-    Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(1), worldPosition(), worldRotation(0) {
-    }
+    Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(1), worldPosition(), worldRotation(0){
+        name = "Transform2D";
+    };
 
     nlohmann::json serialize() override;
     void deserialize(const nlohmann::json &json) override;
@@ -27,6 +28,8 @@ public:
     void rotate(const float rotation) { this->rotation += rotation; }
 
     void calculateWorldPosition();
+
+    Rectangle drawInspector(Rectangle& rectangle) override;
 
     void update(float deltaTime) override{};
     void physicsUpdate(float fixedDeltaTime) override{};

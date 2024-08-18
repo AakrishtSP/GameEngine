@@ -6,8 +6,8 @@ GameEngine &GameEngine::getInstance() {
 }
 
 GameEngine::GameEngine() :
-    physicsUpdateInterval(1.0f / 120.0f), renderUpdateInterval(1.0f / 60.0f), logicUpdateInterval(1.0f / 60.0f),
-    showMessageBox(false), root("Root") {
+    physicsUpdateInterval(1.0f / 60.0f), renderUpdateInterval(1.0f / 60.0f), logicUpdateInterval(1.0f / 60.0f),
+    showMessageBox(false){
     lastRenderTime = std::chrono::high_resolution_clock::now();
     lastPhysicsTime = std::chrono::high_resolution_clock::now();
     lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
@@ -29,6 +29,10 @@ void GameEngine::init() {
     constexpr int screenWidth = 1280;
     constexpr int screenHeight = 720;
 
+    root = std::make_shared<GameObject>("Root");
+
+    SetTraceLogLevel(LOG_WARNING);
+
     InitWindow(screenWidth, screenHeight, "Raylib Game Engine");
 
     while (!IsWindowReady())
@@ -41,12 +45,17 @@ void GameEngine::init() {
     nlohmann::json data = nlohmann::json::parse(f);
     f.close();
 
-    root.deserialize(data);
+    root->deserialize(data);
 
-    nlohmann::json rootJson = root.serialize();
+    nlohmann::json rootJson = root->serialize();
     std::ofstream o("../Data/Outdata.json");
     o << std::setw(4) << rootJson << std::endl;
     o.close();
+
+    Editor::getInstance().init();
+
+
+    SetTargetFPS(60); // Set the target frames-per-second
 }
 
 void GameEngine::run() {
@@ -57,14 +66,6 @@ void GameEngine::run() {
     logicThread = std::thread(&GameEngine::logicLoop, this);
 
     renderLoop();
-
-    // Join threads
-    if (physicsThread.joinable()) {
-        physicsThread.join();
-    }
-    if (logicThread.joinable()) {
-        logicThread.join();
-    }
 }
 
 void GameEngine::logicLoop() {
@@ -73,7 +74,7 @@ void GameEngine::logicLoop() {
         auto logicThreadElapsed = std::chrono::duration<float>(now - lastLogicThreadUpdateTime).count();
 
         if (logicThreadElapsed >= logicUpdateInterval) {
-            root.update(logicUpdateInterval);
+            root->update(logicUpdateInterval);
             lastLogicThreadUpdateTime = now;
         }
 
@@ -92,7 +93,7 @@ void GameEngine::physicsLoop() {
 
         while (accumulatedPhysicsTime >= physicsUpdateInterval) {
             std::lock_guard<std::mutex> lock(physicsMutex);
-            root.physicsUpdate(physicsUpdateInterval);
+            root->physicsUpdate(physicsUpdateInterval);
             accumulatedPhysicsTime -= physicsUpdateInterval;
         }
 
@@ -101,13 +102,16 @@ void GameEngine::physicsLoop() {
 }
 
 void GameEngine::renderLoop() {
+    Editor& editor = Editor::getInstance();
+
     while (!WindowShouldClose()) {
         auto now = std::chrono::high_resolution_clock::now();
         auto elapsed = std::chrono::duration<float>(now - lastRenderTime).count();
 
         BeginDrawing();
         if (elapsed >= renderUpdateInterval) {
-            ClearBackground(GRAY); // Clear the screen to gray
+            ClearBackground(RAYWHITE); // Clear the screen to gray
+
 
             DrawLine(0, GetScreenHeight() / 2, GetScreenWidth(), GetScreenHeight() / 2, RED); // X-axis
             DrawLine(GetScreenWidth() / 2, 0, GetScreenWidth() / 2, GetScreenHeight(), GREEN); // Y-axis
@@ -118,10 +122,14 @@ void GameEngine::renderLoop() {
             // }
 
             std::lock_guard<std::mutex> lock(renderMutex);
-            root.renderUpdate(renderUpdateInterval);
+            root->renderUpdate(renderUpdateInterval);
+
+            editor.draw();
 
             lastRenderTime = now;
         }
         EndDrawing();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
+
     }
 }

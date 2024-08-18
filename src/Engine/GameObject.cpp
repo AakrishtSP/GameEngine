@@ -23,8 +23,6 @@ GameObject &GameObject::addChild(const std::string &name) {
     return *child;
 }
 
-GameObject *GameObject::getParent() const { return parent; }
-
 nlohmann::json GameObject::serialize() {
     nlohmann::json json;
     json["name"] = name;
@@ -53,22 +51,6 @@ nlohmann::json GameObject::serialize() {
 void GameObject::deserialize(const nlohmann::json &json) {
     name = json["name"];
     components.clear();
-    // for (const auto& jsonComponent : json["components"])
-    // {
-    //     std::string type = jsonComponent["componentType"];
-    //     std::shared_ptr<Component> component = ComponentFactory::getInstance().create(type);
-
-    //     if (component)
-    //     {
-    //         component->setOwner(this);
-    //         component->deserialize(jsonComponent);
-    //         components[std::type_index(typeid(*component))] = component;
-    //     }
-    //     else
-    //     {
-    //         std::cerr << "Failed to create component of type: " << type << std::endl;
-    //     }
-    // }
     for (auto it = json["components"].rbegin(); it != json["components"].rend(); ++it) {
         const auto &jsonComponent = *it;
         std::string type = jsonComponent["componentType"];
