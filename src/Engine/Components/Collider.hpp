@@ -17,14 +17,6 @@ public:
     void renderUpdate(float renderDeltaTime) override{};
     void physicsUpdate(float fixedDeltaTime) override;
     void renderUpdate(float renderDeltaTime) override;
-    Vector2 support(Circle &circle, Vector2 &direction);
-    Vector2 support(Rectangle &rectangle, Vector2 &direction);
-    Vector2 support(Polygon &polygon, Vector2 &direction);
-    void update() override;
-    Vector2 supportFunction(Circle &circle, Vector2 &direction);
-    Vector2 supportFunction(const Rectangle& rect, float rotation, const Vector2& direction);
-    //Vector2 support(Rectangle &rectangle, Vector2 &direction);
-    //Vector2 support(Polygon &polygon, Vector2 &direction);
     Vector2 supportFunction(Circle &circle, Vector2 &direction);
     Vector2 supportFunction(const Rectangle& rect, float rotation, const Vector2& direction);
 

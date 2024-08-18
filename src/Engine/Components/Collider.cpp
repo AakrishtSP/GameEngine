@@ -24,6 +24,8 @@ Vector2 Collider::supportFunction(Circle &circle, Vector2 &direction)
     return circle.center + dir * circle.radius;
 }
 
+Vector2 Collider::supportFunction(const Rectangle &rect, float rotation, const Vector2 &direction) { return Vector2(); }
+
 Vector2 supportFunction(const Rectangle& rect, float rotation, const Vector2& direction) {
 
     Vector2 dir = Normalize(direction);
