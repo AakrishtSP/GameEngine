@@ -75,8 +75,8 @@ float Transform2D::getWorldScale() {
 
 Rectangle Transform2D::drawInspector(Rectangle& previousRectangle) {
     // Define the width of the group box and padding
-    float groupBoxWidth = 200.0f;
     float padding = 10.0f;
+    float groupBoxWidth = previousRectangle.width - 2 * padding;
 
     // Initialize the height to accommodate the title of the group box
     float groupBoxHeight = padding; 
@@ -84,7 +84,7 @@ Rectangle Transform2D::drawInspector(Rectangle& previousRectangle) {
 
     // Calculate positions for the first label and text boxes
     float labelX = previousRectangle.x + padding;
-    float labelWidth = 80.0f;
+    float labelWidth = previousRectangle.width / 3.0f;
     float textBoxX = labelX + labelWidth + 10.0f;
     float textBoxWidth = groupBoxWidth - labelWidth - 3 * padding;
 
@@ -116,6 +116,13 @@ Rectangle Transform2D::drawInspector(Rectangle& previousRectangle) {
     // Draw the group box with the "Transform2D" label
     GuiGroupBox(groupBoxRect, "Transform2D");
 
+    Rectangle returnRect = {
+        previousRectangle.x,
+        previousRectangle.y,
+        previousRectangle.width,
+        groupBoxHeight + padding * 5
+    };
+
     // Return the bounding rectangle for the entire group box
-    return groupBoxRect;
+    return returnRect;
 }

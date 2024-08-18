@@ -33,6 +33,8 @@ public:
     void setScale(const float scale) { this->scale = scale; }
     void setRotation(const float rotation) { this->rotation = rotation; }
 
+    Rectangle drawInspector(Rectangle& rectangle) override;
+
     void draw();
     void getTransform();
     
@@ -47,6 +49,7 @@ protected:
     Vector2 size{};
     bool isTextureInitialized = false;
     std::string filename;
+    
 
     std::mutex spriteMutex;
 };

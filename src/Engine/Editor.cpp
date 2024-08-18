@@ -22,7 +22,7 @@ void Editor::draw() {
     float offsetY = 10.0f;
     float screenHeight = GetScreenHeight();
     Rectangle win = {0, 0, 400, screenHeight};
-    GuiWindowBox(win, "hello");
+    GuiWindowBox(win, "Hiararchy");
     drawHierarchy(GameEngine::getInstance().getRoot(), win.x+10.0f, win.y+30.0f, offsetY);
 
     // // Draw the inspector
