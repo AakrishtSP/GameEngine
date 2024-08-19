@@ -9,6 +9,14 @@ bool CollisionManager::pointPassedOrigin (Vector2 refrenceVec, Vector2 testingVe
         return true;
 }
 
+bool CollisionManager::pointPassedOrigin (Vector2 refrenceVec1, Vector2 refrenceVec2, Vector2 testingVec){
+    Vector2 perpendiVec = directionToOrigin(refrenceVec1, refrenceVec2);
+    if (DotProduct(perpendiVec, testingVec) < 0)
+        return false;
+    else   
+        return true;
+}
+
 Vector2 CollisionManager::directionToOrigin (Vector2 vec1, Vector2 vec2){
     Vector2 lineVec = vec2 - vec1;
     Vector2 perpendiVec = {lineVec.y, lineVec.x * -1};
@@ -16,14 +24,6 @@ Vector2 CollisionManager::directionToOrigin (Vector2 vec1, Vector2 vec2){
         perpendiVec = perpendiVec * -1;
 
     return Normalize(perpendiVec);
-}
-
-bool CollisionManager::pointPassedOrigin (Vector2 refrenceVec1, Vector2 refrenceVec2, Vector2 testingVec){
-    Vector2 perpendiVec = directionToOrigrin(refrenceVec1, refrenceVec2);
-    if (DotProduct(perpendiVec, testingVec) < 0)
-        return false;
-    else   
-        return true;
 }
 
 int CollisionManager::triangleContainOrigin (Vector2 oldVec1, Vector2 oldVec2, Vector2 recentVec){
