@@ -41,16 +41,17 @@ void GameEngine::init() {
     const std::filesystem::path currentPath = std::filesystem::current_path();
     std::cout << "Current Working Directory: " << currentPath << std::endl;
 
-    std::ifstream f("../Data/data.json");
-    nlohmann::json data = nlohmann::json::parse(f);
-    f.close();
+    // std::ifstream f("../Data/data.json");
+    // nlohmann::json data = nlohmann::json::parse(f);
+    // f.close();
+    // root->deserialize(data);
 
-    root->deserialize(data);
+    deserializeScene("../Data/data.json");
 
-    nlohmann::json rootJson = root->serialize();
-    std::ofstream o("../Data/Outdata.json");
-    o << std::setw(4) << rootJson << std::endl;
-    o.close();
+    // nlohmann::json rootJson = root->serialize();
+    // std::ofstream o("../Data/Outdata.json");
+    // o << std::setw(4) << rootJson << std::endl;
+    // o.close();
 
     Editor::getInstance().init();
 
@@ -58,14 +59,30 @@ void GameEngine::init() {
     SetTargetFPS(60); // Set the target frames-per-second
 }
 
-void GameEngine::run() {
-    init();
+void GameEngine:: deserializeScene(const std::string &scenePath) {
+    std::ifstream f(scenePath);
+    nlohmann::json data = nlohmann::json::parse(f);
+    f.close();
+    root->deserialize(data);
+}
 
+void GameEngine::serializeScene(const std::string &scenePath) {
+    nlohmann::json rootJson = root->serialize();
+    std::ofstream o(scenePath);
+    o << std::setw(4) << rootJson << std::endl;
+    o.close();
+}
+
+void GameEngine::run() {
     // Start threads for physics and rendering
     physicsThread = std::thread(&GameEngine::physicsLoop, this);
     logicThread = std::thread(&GameEngine::logicLoop, this);
 
     renderLoop();
+
+    // Wait for threads to finish
+
+    serializeScene("../Data/Outdata.json");
 }
 
 void GameEngine::logicLoop() {

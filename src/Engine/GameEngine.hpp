@@ -22,16 +22,19 @@ public:
 
     std::shared_ptr<GameObject> getRoot(){return root;};
 
+    void init();
     void run();
 
 private:
     GameEngine();
     ~GameEngine();
 
-    void init();
     void logicLoop();
     void physicsLoop();
     void renderLoop();
+
+    void deserializeScene(const std::string& scenePath);
+    void serializeScene(const std::string& scenePath);
 
     std::mutex renderMutex;
     std::mutex physicsMutex;
