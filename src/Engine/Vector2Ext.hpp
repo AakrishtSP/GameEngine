@@ -10,6 +10,7 @@ struct Circle {
     float radius;
 };
 
+// Addition operator for Vector2
 inline Vector2 operator+(const Vector2& lhs, const Vector2& rhs) {
     return { lhs.x + rhs.x, lhs.y + rhs.y };
 }
