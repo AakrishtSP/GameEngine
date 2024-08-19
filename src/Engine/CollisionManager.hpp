@@ -15,8 +15,9 @@ class CollisionManager{
     }
 
     bool didCollide (Rectangle rect1, Rectangle rect2);
-    int containOrigin (Vector2 vec1, Vector2 vec2, Vector2 vec3);
+    int triangleContainOrigin (Vector2 vec1, Vector2 vec2, Vector2 vec3);
     bool pointPassedOrigin (Vector2 refrenceVec, Vector2 testingVec);
+    bool pointPassedOrigin (Vector2 refrenceVec1, Vector2 refrenceVec2, Vector2 testingVec);
     Vector2 directionToOrigin (Vector2 vec1, Vector2 vec2);
 
 
