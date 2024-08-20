@@ -79,7 +79,7 @@ target_link_libraries(Engine PRIVATE raylib nlohmann_json::nlohmann_json raygui)
 # Create library for components
 add_library(Components STATIC ${COMPONENT_SOURCES})
 target_link_libraries(Components PRIVATE Engine)
-target_include_directories(Components PRIVATE ${raygui_SOURCE_DIR}/src)
+target_include_directories(Components PRIVATE ${raylib_SOURCE_DIR}/src ${raygui_SOURCE_DIR}/src)
 
 # Create shared libraries for each script
 foreach(script_cpp IN LISTS SCRIPT_SOURCES)

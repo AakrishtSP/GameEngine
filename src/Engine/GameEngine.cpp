@@ -61,7 +61,6 @@ void GameEngine::init() {
     const auto child2Sprite = child2.addComponent<SpriteRenderer>();
 
     script->loadScript("../assets/Build/libtest.so");
-
     child2Sprite->loadImage("../assets/Raylib_logo.png");
     child2Sprite->resizeImage(150, 150);
     child2Sprite->initTexture();
