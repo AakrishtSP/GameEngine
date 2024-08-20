@@ -75,11 +75,12 @@ file(GLOB_RECURSE SCRIPT_SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/Sc
 # Create library for engine
 add_library(Engine STATIC ${ENGINE_SOURCES})
 target_link_libraries(Engine PRIVATE raylib nlohmann_json::nlohmann_json raygui)
+target_include_directories(Engine PRIVATE ${nlohmann_json_SOURCE_DIR}/include) # Ensure Engine can find nlohmann_json
 
 # Create library for components
 add_library(Components STATIC ${COMPONENT_SOURCES})
 target_link_libraries(Components PRIVATE Engine)
-target_include_directories(Components PRIVATE ${raylib_SOURCE_DIR}/src ${raygui_SOURCE_DIR}/src)
+target_include_directories(Components PRIVATE ${raylib_SOURCE_DIR}/src ${raygui_SOURCE_DIR}/src ${nlohmann_json_SOURCE_DIR}/include) # Ensure Components can find raylib and nlohmann_json
 
 # Create shared libraries for each script
 foreach(script_cpp IN LISTS SCRIPT_SOURCES)
