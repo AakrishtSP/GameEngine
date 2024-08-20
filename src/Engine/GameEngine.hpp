@@ -5,6 +5,7 @@
 #include <fstream>
 #include <mutex>
 #include <thread>
+#include "Components/Components.hpp"
 #include "Base.hpp"
 #include "Editor.hpp"
 

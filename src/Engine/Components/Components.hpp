@@ -6,6 +6,9 @@
 #include "SpriteRenderer.hpp"
 #include "Collider.hpp"
 #include "RigidBody2D.hpp"
+#include "ScriptLoader.hpp"
+
+class ScriptLoader;
 
 // Registering components
 void inline registerComponents() {
@@ -14,4 +17,5 @@ void inline registerComponents() {
     factory.registerComponent<SpriteRenderer>("SpriteRenderer");
     factory.registerComponent<Collider>("Collider");
     factory.registerComponent<RigidBody2D>("RigidBody2D");
+    factory.registerComponent<ScriptLoader>("ScriptLoader");
 }
