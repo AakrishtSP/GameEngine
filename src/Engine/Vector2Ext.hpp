@@ -35,6 +35,11 @@ inline Vector2 operator/(const Vector2& vec, const float scalar) {
     return { vec.x / scalar, vec.y / scalar };
 }
 
+//Comparison operator for Vector2
+inline bool operator==(const Vector2& lhs, const Vector2& rhs){
+    return (lhs.x == rhs.x && lhs.y == rhs.y);
+}
+
 // Dot product for Vector2
 inline float DotProduct(const Vector2& lhs, const Vector2& rhs) {
     return lhs.x * rhs.x + lhs.y * rhs.y;
