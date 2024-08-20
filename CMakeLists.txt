@@ -87,6 +87,7 @@ foreach(script_cpp IN LISTS SCRIPT_SOURCES)
     get_filename_component(script_name ${script_cpp} NAME_WE)
     add_library(${script_name} SHARED ${script_cpp})
     target_link_libraries(${script_name} PRIVATE Engine Components)
+    target_include_directories(${script_name} PRIVATE ${raylib_SOURCE_DIR}/src ${raygui_SOURCE_DIR}/src ${nlohmann_json_SOURCE_DIR}/include) # Ensure scripts can find raylib and nlohmann_json
     set_target_properties(${script_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/assets/Build)
 endforeach()
 
