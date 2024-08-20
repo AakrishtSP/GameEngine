@@ -1,5 +1,4 @@
 #include "CollisionManager.hpp"
-#include "Vector2Ext.hpp"
 
 //To check if a point passes origin with respect to a point
 bool CollisionManager::pointPassedOrigin (Vector2 refrenceVec, Vector2 testingVec){
@@ -41,7 +40,7 @@ int CollisionManager::triangleContainOrigin (Vector2 oldVec1, Vector2 oldVec2, V
 }
 
 //Support function of Rectangle
-Vector2 CollisionManager::supportFunction(const Rectangle& rect, float rotation, const Vector2& direction) {
+Vector2 CollisionManager::supportFunction(const Rect& rect, const Vector2& direction) {
 
     Vector2 dir = Normalize(direction);
     Vector2 vertices[4]= {
@@ -50,13 +49,10 @@ Vector2 CollisionManager::supportFunction(const Rectangle& rect, float rotation,
         {rect.x + rect.width, rect.y + rect.height},
         {rect.x, rect.y + rect.height}
     };
-    float radi = getRadian(rotation);
-    float cosA = cos(radi);
-    float sinA = sin(radi);
     
     Vector2 rotationPoint = {rect.x + rect.width / 2, rect.y + rect.height / 2};
     for (int i = 0; i < 4; i++) {
-        RotatePoint(vertices[i], rotationPoint, rotation);
+        RotatePoint(vertices[i], rotationPoint, rect.rotation);
     }
 
     float maxDot = DotProduct(vertices[0], dir);
@@ -80,14 +76,14 @@ Vector2 CollisionManager::supportFunction(const Circle &circle, const Vector2 &d
 }
 
 //Simplex support function for two rectangles
-Vector2 CollisionManager::simplexSupportFunction(const Rectangle& rect1,const Rectangle& rect2 ,const Vector2& direction){
-    Vector2 support1 = supportFunction(rect1, rect1.rotation, direction);
-    Vector2 support2 = supportFunction(rect2, rect2.rotation, direction * -1);
+Vector2 CollisionManager::simplexSupportFunction(const Rect& rect1,const Rect& rect2 ,const Vector2& direction){
+    Vector2 support1 = supportFunction(rect1, direction);
+    Vector2 support2 = supportFunction(rect2, direction * -1);
     return support1 - support2;
 }
 //Simplex support function a rectangle and a circle
-Vector2 CollisionManager::simplexSupportFunction(const Rectangle& rect, const Circle& circle, const Vector2& direction){
-    Vector2 support1 = supportFunction(rect, rect.rotation, direction);
+Vector2 CollisionManager::simplexSupportFunction(const Rect& rect, const Circle& circle, const Vector2& direction){
+    Vector2 support1 = supportFunction(rect, direction);
     Vector2 support2 = supportFunction(circle, direction * -1);
     return support1 - support2;
 }
@@ -100,7 +96,7 @@ Vector2 CollisionManager::simplexSupportFunction(const Circle& circle1, const Ci
 }
 
 //Check if two rectangles collide
-bool CollisionManager::didCollide (Rectangle rect1, Rectangle rect2){
+bool CollisionManager::didCollide (Rect rect1, Rect rect2){
     Vector2 direction = Normalize(Vector2{rect2.x - rect1.x, rect2.y - rect1.y});
     Vector2 simplex1 = simplexSupportFunction(rect1, rect2, direction);
     direction = Normalize(simplex1 * -1);
@@ -133,7 +129,7 @@ bool CollisionManager::didCollide (Rectangle rect1, Rectangle rect2){
 }
 
 //Check if a rectangle and a circle collide
-bool CollisionManager::didCollide (Rectangle rect, Circle Cir){
+bool CollisionManager::didCollide (Rect rect, Circle Cir){
     Vector2 direction = Normalize(Vector2{Cir.center.x - rect.x, Cir.center.y - rect.y});
     Vector2 simplex1 = simplexSupportFunction(rect, Cir, direction);
     direction = Normalize(simplex1 * -1);
@@ -166,5 +162,9 @@ bool CollisionManager::didCollide (Rectangle rect, Circle Cir){
 
 //Check if two circles collide
 bool CollisionManager::didCollide (Circle Cir1, Circle Cir2){
-    
+    float distance = Magnitude(Cir1.center - Cir2.center);
+    if (distance < Cir1.radius + Cir2.radius)
+        return true;
+    else
+        return false;
 }

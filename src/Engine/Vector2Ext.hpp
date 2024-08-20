@@ -10,6 +10,22 @@ struct Circle {
     float radius;
 };
 
+struct Rect {
+    float x;
+    float y;
+    float height;
+    float width;
+    float rotation;
+
+};
+
+inline float getRadian(float dgree){
+        return (dgree/180)*3.14;
+    }
+inline float getDgree(float radian){
+        return (radian*180)/3.14;
+}
+
 // Addition operator for Vector2
 inline Vector2 operator+(const Vector2& lhs, const Vector2& rhs) {
     return { lhs.x + rhs.x, lhs.y + rhs.y };
@@ -91,6 +107,9 @@ inline Vector2 Reflect(const Vector2& vec, const Vector2& normal) {
 inline void RotatePoint(Vector2& vec, Vector2 rotationPoint, float rotationAngle){
     float x = vec.x - rotationPoint.x;
     float y = vec.y - rotationPoint.y;
-    vec.x = x * cos(rotationAngle) - y * sin(rotationAngle) + rotationPoint.x;
-    vec.y = x * sin(rotationAngle) + y * cos(rotationAngle) + rotationPoint.y;
+    float radi = getRadian(rotationAngle);
+    float cosA = cos(radi);
+    float sinA = sin(radi);
+    vec.x = x * cosA - y * sinA + rotationPoint.x;
+    vec.y = x * sinA + y * cosA + rotationPoint.y;
 }
