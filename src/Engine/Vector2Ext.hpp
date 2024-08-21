@@ -16,7 +16,6 @@ struct Rect {
     float height;
     float width;
     float rotation;
-
 };
 
 inline float getRadian(float dgree){

@@ -1,5 +1,8 @@
 #pragma once
 
+// #include "GameEngine.hpp"
+// #include "Editor.hpp"
+
 #include "GameObject.hpp"
 
 class GameObject;
@@ -28,6 +31,9 @@ public:
     }
 
     std::string getName() const { return name; }
+
+    // friend class Editor;
+    // friend class GameEngine;
 
 
 protected:

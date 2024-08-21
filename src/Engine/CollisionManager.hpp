@@ -7,13 +7,13 @@ class CollisionManager{
         return instance;
     }
 
-    CollisionManager() = default;
-    CollisionManager(const CollisionManager&) = delete;
-    CollisionManager& operator=(const CollisionManager&) = delete;
-
     bool didCollide (Rect rect1, Rect rect2);
-    bool didCollide (Rect rect, Circle Cir);
     bool didCollide (Circle Cir1, Circle Cir2);
+    bool didCollide (Rect rect, Circle Cir);
+    bool didCollide (Circle Cir, Rect rect){return didCollide(rect, Cir);};
+
+
+
     int triangleContainOrigin (Vector2 vec1, Vector2 vec2, Vector2 vec3);
     bool pointPassedOrigin (Vector2 refrenceVec, Vector2 testingVec);
     bool pointPassedOrigin (Vector2 refrenceVec1, Vector2 refrenceVec2, Vector2 testingVec);
@@ -26,5 +26,8 @@ class CollisionManager{
 
 
     private:
+        CollisionManager() = default;
+        CollisionManager(const CollisionManager&) = delete;
+        CollisionManager& operator=(const CollisionManager&) = delete;
         //std::unordered_map<std::string, vector<>> creators;
 };

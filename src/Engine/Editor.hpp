@@ -1,7 +1,4 @@
 #pragma once
-#ifndef RAYGUI_IMPLEMENTATION
-#define RAYGUI_IMPLEMENTATION
-#endif
 
 #include "Components/ComponentFactory.hpp"
 #include "GameObject.hpp"
@@ -37,9 +34,9 @@ public:
     // Other public methods can be added here
     void draw();
 
+    void setSelectedGameObject(std::shared_ptr<GameObject> gameObject) { selectedGameObject = gameObject; }
 
-    // void updateRootTree();
-    void drawGameObjectTree(GameObjectTree& node, float x, float y, float& offsetY);
+    void drawPlayButton();
 
     void drawInspector(std::shared_ptr<GameObject> gameObject);
     void drawHierarchy(std::shared_ptr<GameObject> gameObject, float x, float y, float& offsetY);

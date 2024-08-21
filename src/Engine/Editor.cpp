@@ -1,4 +1,8 @@
 #include "Editor.hpp"
+
+#ifndef RAYGUI_IMPLEMENTATION
+#define RAYGUI_IMPLEMENTATION
+#endif
 #include "raygui.h"
 
 
@@ -27,6 +31,29 @@ void Editor::draw() {
 
     // // Draw the inspector
     drawInspector(selectedGameObject);
+
+    // Draw the play button
+    drawPlayButton();
+}
+
+void Editor::drawPlayButton() {
+    float screenWidth = GetScreenWidth();
+    // float screenHeight = GetScreenHeight();
+    float windowWidth = 70;
+    float windowHeight = 35;
+
+    Rectangle win ={(screenWidth-windowWidth)/2, 0, windowWidth, windowHeight};
+    // GuiGroupBox(win, "PlayPause");
+    // GuiWindowBox(win, "Play");
+
+    Rectangle rect = {win.x, win.y, win.width/2, win.height};
+    if (GuiButton(rect, ">")) {
+        GameEngine::getInstance().isPlaying = true;
+    }
+    rect.x += windowWidth/2;
+    if (GuiButton(rect, "||")) {
+        GameEngine::getInstance().isPlaying = false;
+    }
 }
 
 void Editor::drawInspector(std::shared_ptr<GameObject> gameObject) {

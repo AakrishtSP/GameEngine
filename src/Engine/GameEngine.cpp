@@ -7,7 +7,7 @@ GameEngine &GameEngine::getInstance() {
 
 GameEngine::GameEngine() :
     physicsUpdateInterval(1.0f / 60.0f), renderUpdateInterval(1.0f / 60.0f), logicUpdateInterval(1.0f / 60.0f),
-    showMessageBox(false){
+    showMessageBox(false) {
     lastRenderTime = std::chrono::high_resolution_clock::now();
     lastPhysicsTime = std::chrono::high_resolution_clock::now();
     lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
@@ -73,7 +73,7 @@ void GameEngine::init() {
     SetTargetFPS(60); // Set the target frames-per-second
 }
 
-void GameEngine:: deserializeScene(const std::string &scenePath) {
+void GameEngine::deserializeScene(const std::string &scenePath) {
     std::ifstream f(scenePath);
     nlohmann::json data = nlohmann::json::parse(f);
     f.close();
@@ -101,15 +101,19 @@ void GameEngine::run() {
 
 void GameEngine::logicLoop() {
     while (!WindowShouldClose()) {
-        auto now = std::chrono::high_resolution_clock::now();
-        auto logicThreadElapsed = std::chrono::duration<float>(now - lastLogicThreadUpdateTime).count();
+        if (isPlaying) {
+            auto now = std::chrono::high_resolution_clock::now();
+            auto logicThreadElapsed = std::chrono::duration<float>(now - lastLogicThreadUpdateTime).count();
 
-        if (logicThreadElapsed >= logicUpdateInterval) {
-            root->update(logicUpdateInterval);
-            lastLogicThreadUpdateTime = now;
+            if (logicThreadElapsed >= logicUpdateInterval) {
+                root->update(logicUpdateInterval);
+                lastLogicThreadUpdateTime = now;
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
+        } else {
+            lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
         }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }
 }
 
@@ -117,23 +121,27 @@ void GameEngine::physicsLoop() {
     float accumulatedPhysicsTime = 0.0f;
 
     while (!WindowShouldClose()) {
-        auto now = std::chrono::high_resolution_clock::now();
-        auto physicsElapsed = std::chrono::duration<float>(now - lastPhysicsTime).count();
-        accumulatedPhysicsTime += physicsElapsed;
-        lastPhysicsTime = now;
+        if (isPlaying) {
+            auto now = std::chrono::high_resolution_clock::now();
+            auto physicsElapsed = std::chrono::duration<float>(now - lastPhysicsTime).count();
+            accumulatedPhysicsTime += physicsElapsed;
+            lastPhysicsTime = now;
 
-        while (accumulatedPhysicsTime >= physicsUpdateInterval) {
-            std::lock_guard<std::mutex> lock(physicsMutex);
-            root->physicsUpdate(physicsUpdateInterval);
-            accumulatedPhysicsTime -= physicsUpdateInterval;
+            while (accumulatedPhysicsTime >= physicsUpdateInterval) {
+                std::lock_guard<std::mutex> lock(physicsMutex);
+                root->physicsUpdate(physicsUpdateInterval);
+                accumulatedPhysicsTime -= physicsUpdateInterval;
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
+        } else {
+            accumulatedPhysicsTime = 0.0f;
         }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }
 }
 
 void GameEngine::renderLoop() {
-    Editor& editor = Editor::getInstance();
+    Editor &editor = Editor::getInstance();
 
     while (!WindowShouldClose()) {
         auto now = std::chrono::high_resolution_clock::now();
@@ -143,14 +151,10 @@ void GameEngine::renderLoop() {
         if (elapsed >= renderUpdateInterval) {
             ClearBackground(RAYWHITE); // Clear the screen to gray
 
-
-            DrawLine(0, GetScreenHeight() / 2, GetScreenWidth(), GetScreenHeight() / 2, RED); // X-axis
-            DrawLine(GetScreenWidth() / 2, 0, GetScreenWidth() / 2, GetScreenHeight(), GREEN); // Y-axis
-
-            // if (!showMessageBox) {
-            //     int result = GuiMessageBox((Rectangle){85, 70, 250, 100}, "#191#Message Box", "Hi! This is a message!",
-            //                                "Nice;Cool");
-            // }
+            if (!isPlaying) {
+                DrawLine(0, GetScreenHeight() / 2, GetScreenWidth(), GetScreenHeight() / 2, RED); // X-axis
+                DrawLine(GetScreenWidth() / 2, 0, GetScreenWidth() / 2, GetScreenHeight(), GREEN); // Y-axis
+            }
 
             std::lock_guard<std::mutex> lock(renderMutex);
             root->renderUpdate(renderUpdateInterval);
@@ -161,6 +165,5 @@ void GameEngine::renderLoop() {
         }
         EndDrawing();
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
-
     }
 }

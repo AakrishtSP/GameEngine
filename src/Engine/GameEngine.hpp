@@ -10,13 +10,6 @@
 #include "Editor.hpp"
 
 
-// #ifndef RAYGUI_IMPLEMENTATION
-// #define RAYGUI_IMPLEMENTATION
-// #endif
-
-// #include "raygui.h"
-
-
 class GameEngine {
 public:
     static GameEngine& getInstance();
@@ -25,6 +18,8 @@ public:
 
     void init();
     void run();
+
+    friend class Editor;
 
 private:
     GameEngine();
@@ -54,6 +49,8 @@ private:
     std::chrono::time_point<std::chrono::high_resolution_clock> lastLogicThreadUpdateTime;
 
     bool showMessageBox;
+
+    bool isPlaying;
 
     // Deleted to prevent copying
     GameEngine(const GameEngine&) = delete;
