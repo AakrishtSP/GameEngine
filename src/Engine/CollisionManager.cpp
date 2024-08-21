@@ -168,3 +168,10 @@ bool CollisionManager::didCollide (Circle Cir1, Circle Cir2){
     else
         return false;
 }
+
+
+// AABB collision check
+bool AABB::intersects(const AABB& other) const {
+    return (max.x >= other.min.x && min.x <= other.max.x &&
+            max.y >= other.min.y && min.y <= other.max.y);
+}
