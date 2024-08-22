@@ -11,6 +11,9 @@ public:
     ScriptLoader();
     ~ScriptLoader() override;
 
+    nlohmann::json serialize() override;
+    void deserialize(const nlohmann::json &j) override;
+
     // Override Component methods
     void update(float deltaTime) override;
     void physicsUpdate(float fixedDeltaTime) override;
@@ -26,6 +29,8 @@ public:
 private:
     void* scriptHandle = nullptr;
     ScriptInterface* scriptInstance = nullptr;
+
+    std::string scriptPath;
 
     using CreateFuncType = ScriptInterface*(*)();
     using DestroyFuncType = void(*)(ScriptInterface*);

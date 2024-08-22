@@ -12,8 +12,8 @@ public:
     void onStart() override {
         std::cout << "Script started!" << std::endl;
         std::cout << "Owner name: " << owner->getName() << std::endl;
-        transform = owner->getComponent<Transform2D>();
-        rigidBody = owner->getComponent<RigidBody2D>();
+        // transform = owner->getComponent<Transform2D>();
+        // rigidBody = owner->getComponent<RigidBody2D>();
     }
 
     void onUpdate(float deltaTime) override {
@@ -22,6 +22,12 @@ public:
         // std::cout << "Script update: " << deltaTime << std::endl;
     }
     void onPhysicsUpdate(float fixedDeltaTime) override {
+        if (!rigidBody) {
+            rigidBody = owner->getComponent<RigidBody2D>();
+        }
+        if (!transform) {
+            transform = owner->getComponent<Transform2D>();
+        }
         float multiplier = 20.0f;
         if (IsKeyDown(KEY_W)) {
             rigidBody->setVelocityY(multiplier);

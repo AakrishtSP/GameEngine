@@ -5,12 +5,13 @@
             "components": [
                 {
                     "componentType": "ScriptLoader",
-                    "isActive": true
+                    "isActive": true,
+                    "scriptPath": "../assets/Build/libtest.so"
                 },
                 {
                     "acceleration": [
                         0.0,
-                        0.0
+                        -9.800000190734863
                     ],
                     "componentType": "RigidBody2D",
                     "force": [
@@ -21,8 +22,8 @@
                     "isMoveable": true,
                     "mass": 1.0,
                     "velocity": [
-                        0.0,
-                        0.0
+                        20.0,
+                        -61.770172119140625
                     ]
                 },
                 {
@@ -68,8 +69,8 @@
                     "componentType": "Transform2D",
                     "isActive": true,
                     "position": [
-                        0.0,
-                        0.0
+                        77.96200561523438,
+                        -152.1995849609375
                     ],
                     "rotation": 0.0,
                     "scale": 1.0
@@ -109,7 +110,7 @@
                     "isActive": true,
                     "position": [
                         -100.0,
-                        -100.0
+                        -358.2224426269531
                     ],
                     "rotation": 0.0,
                     "scale": 1.0
@@ -132,7 +133,7 @@
                 {
                     "acceleration": [
                         0.0,
-                        0.0
+                        -9.800000190734863
                     ],
                     "componentType": "RigidBody2D",
                     "force": [
@@ -144,7 +145,7 @@
                     "mass": 1.0,
                     "velocity": [
                         0.0,
-                        0.0
+                        -71.05769348144531
                     ]
                 }
             ],
@@ -157,9 +158,9 @@
             "shapes": [
                 {
                     "circle": [
-                        3.0691238965642143e-41,
-                        3.4102783829219745e-32,
-                        3.0691238965642143e-41
+                        3.569107188635309e-41,
+                        -6.186894084685456e-25,
+                        3.569107188635309e-41
                     ],
                     "isCircle": false,
                     "offset": [
@@ -176,9 +177,9 @@
                 },
                 {
                     "circle": [
-                        3.0691238965642143e-41,
-                        3.385179227543217e-32,
-                        3.0691238965642143e-41
+                        3.569107188635309e-41,
+                        -6.145108122535899e-25,
+                        3.569107188635309e-41
                     ],
                     "isCircle": false,
                     "offset": [
@@ -195,9 +196,9 @@
                 },
                 {
                     "circle": [
-                        3.0691238965642143e-41,
-                        3.3851557176562005e-32,
-                        3.0691238965642143e-41
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "isCircle": false,
                     "offset": [

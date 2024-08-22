@@ -9,6 +9,20 @@ ScriptLoader::~ScriptLoader() {
     unloadScript();
 }
 
+nlohmann::json ScriptLoader::serialize() { 
+    nlohmann::json json;
+    json["componentType"] = name;
+    json["isActive"] = isActive;
+    json["scriptPath"] = scriptPath;
+    return json;
+}
+
+void ScriptLoader::deserialize(const nlohmann::json &json) {
+    isActive = json["isActive"].get<bool>();
+    scriptPath = json["scriptPath"].get<std::string>();
+    loadScript(scriptPath);
+}
+
 bool ScriptLoader::loadScript(const std::string& scriptPath) {
     unloadScript();  // Unload any previously loaded script
 
@@ -41,6 +55,7 @@ bool ScriptLoader::loadScript(const std::string& scriptPath) {
     if (getOwner()) {
         scriptInstance->setOwner(getOwner());
     }
+    this->scriptPath = scriptPath;
     scriptInstance->onStart();
     return true;
 }
