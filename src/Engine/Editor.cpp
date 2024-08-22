@@ -34,7 +34,12 @@ void Editor::draw() {
 
     // Draw the play button
     drawPlayButton();
+
+    // Draw the statistics
+    drawStatistics();
 }
+
+
 
 void Editor::drawPlayButton() {
     float screenWidth = GetScreenWidth();
@@ -114,6 +119,26 @@ void Editor::drawHierarchy(std::shared_ptr<GameObject> gameObject,float x, float
             drawHierarchy(child, x + 20, offsetY, offsetY); // Increase indent for child nodes
         }
     }
+}
+
+void Editor::drawStatistics() {
+    float screenWidth = GetScreenWidth();
+    float screenHeight = GetScreenHeight();
+    float windowWidth = 300;
+    float windowHeight = 100;
+
+    Rectangle win = {(screenWidth - windowWidth)/2, screenHeight - windowHeight, windowWidth, windowHeight};
+    GuiWindowBox(win, "Statistics");
+
+    // Draw the statistics
+    GuiLabel(Rectangle{win.x + 10, win.y + 30, 100, 20}, "Physics Update:");
+    GuiLabel(Rectangle{win.x + 10, win.y + 50, 100, 20}, "Render Update:");
+    GuiLabel(Rectangle{win.x + 10, win.y + 70, 100, 20}, "Logic Update:");
+
+    // Draw the values
+    GuiLabel(Rectangle{win.x + 120, win.y + 30, 100, 20}, std::to_string(GameEngine::getInstance().getPhysicsUpdateInterval()).c_str());
+    GuiLabel(Rectangle{win.x + 120, win.y + 50, 100, 20}, std::to_string(GameEngine::getInstance().getRenderUpdateInterval()).c_str());
+    GuiLabel(Rectangle{win.x + 120, win.y + 70, 100, 20}, std::to_string(GameEngine::getInstance().getLogicUpdateInterval()).c_str());
 }
 
 bool Editor::GuiLabelButton(Rectangle rect, const char *text) {

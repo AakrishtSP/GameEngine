@@ -8,6 +8,24 @@
                     "isActive": true
                 },
                 {
+                    "acceleration": [
+                        0.0,
+                        0.0
+                    ],
+                    "componentType": "RigidBody2D",
+                    "force": [
+                        0.0,
+                        0.0
+                    ],
+                    "isActive": true,
+                    "isMoveable": false,
+                    "mass": 1.0,
+                    "velocity": [
+                        -20.0,
+                        20.0
+                    ]
+                },
+                {
                     "componentType": "SpriteRenderer",
                     "filename": "../assets/Raylib_logo.png",
                     "isActive": true,
@@ -26,8 +44,8 @@
                     "componentType": "Transform2D",
                     "isActive": true,
                     "position": [
-                        19.0,
-                        -1.0
+                        14.612715721130371,
+                        73.4110107421875
                     ],
                     "rotation": 0.0,
                     "scale": 1.0
@@ -38,6 +56,16 @@
         {
             "children": [],
             "components": [
+                {
+                    "componentType": "Transform2D",
+                    "isActive": true,
+                    "position": [
+                        -100.0,
+                        -100.0
+                    ],
+                    "rotation": 0.0,
+                    "scale": 1.0
+                },
                 {
                     "componentType": "SpriteRenderer",
                     "filename": "../assets/Raylib_logo.png",
@@ -54,14 +82,22 @@
                     ]
                 },
                 {
-                    "componentType": "Transform2D",
-                    "isActive": true,
-                    "position": [
-                        -100.0,
-                        -100.0
+                    "acceleration": [
+                        0.0,
+                        0.0
                     ],
-                    "rotation": 0.0,
-                    "scale": 1.0
+                    "componentType": "RigidBody2D",
+                    "force": [
+                        0.0,
+                        0.0
+                    ],
+                    "isActive": true,
+                    "isMoveable": false,
+                    "mass": 1.0,
+                    "velocity": [
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "name": "Child2"

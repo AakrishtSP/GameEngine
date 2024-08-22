@@ -2,7 +2,7 @@
 #include "../../src/Engine/Base.hpp"
 #include <iostream>
 
-class Transform2D;
+// class Transform2D;
 class ExampleScript : public ScriptInterface {
 public:
     void setOwner(GameObject* owner) override {
@@ -13,6 +13,7 @@ public:
         std::cout << "Script started!" << std::endl;
         std::cout << "Owner name: " << owner->getName() << std::endl;
         transform = owner->getComponent<Transform2D>();
+        rigidBody = owner->getComponent<RigidBody2D>();
     }
 
     void onUpdate(float deltaTime) override {
@@ -21,23 +22,29 @@ public:
         // std::cout << "Script update: " << deltaTime << std::endl;
     }
     void onPhysicsUpdate(float fixedDeltaTime) override {
+        float multiplier = 20.0f;
         if (IsKeyDown(KEY_W)) {
-            transform->translate({0, 1});
+            rigidBody->setVelocityY(multiplier);
+            // rigidBody->addForce({0, multiplier});
         }
         if (IsKeyDown(KEY_S)) {
-            transform->translate({0, -1});
+            rigidBody->setVelocityY( -multiplier);
+            // rigidBody->addForce({0, -multiplier});
         }
         if (IsKeyDown(KEY_A)) {
-            transform->translate({-1, 0});
+            rigidBody->setVelocityX(-multiplier);
+            // rigidBody->addForce({-multiplier, 0});
         }
         if (IsKeyDown(KEY_D)) {
-            transform->translate({1, 0});
+            rigidBody->setVelocityX(multiplier);
+            // rigidBody->addForce({multiplier, 0});
         }
         // std::cout << "Script physics update: " << fixedDeltaTime << std::endl;
     }
 
 private:
     std::shared_ptr<Transform2D> transform = nullptr;
+    std::shared_ptr<RigidBody2D> rigidBody = nullptr;
     GameObject* owner = nullptr;
 };
 

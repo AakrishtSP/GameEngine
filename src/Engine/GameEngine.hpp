@@ -14,10 +14,26 @@ class GameEngine {
 public:
     static GameEngine& getInstance();
 
-    std::shared_ptr<GameObject> getRoot(){return root;};
 
     void init();
     void run();
+
+    std::shared_ptr<GameObject> getRoot(){return root;};
+
+    [[nodiscard]] float getPhysicsUpdateInterval() const { return lastPhysicsUpdateTime; }
+    [[nodiscard]] float getRenderUpdateInterval() const { return lastRenderUpdateTime; }
+    [[nodiscard]] float getLogicUpdateInterval() const { return lastLogicUpdateTime; }
+
+    void setPhysicsUpdateInterval(float interval) { targetPhysicsUpdateInterval = interval; }
+    void setRenderUpdateInterval(float interval) { targetRenderUpdateInterval = interval; }
+    void setLogicUpdateInterval(float interval) { targetLogicUpdateInterval = interval; }
+
+    void setWorldGravity(const Vector2 &gravity) { worldGravity = gravity; }
+    [[nodiscard]] Vector2 getWorldGravity() const { return worldGravity; }
+
+    
+    void deserializeScene(const std::string& scenePath);
+    void serializeScene(const std::string& scenePath);
 
     friend class Editor;
 
@@ -25,12 +41,12 @@ private:
     GameEngine();
     ~GameEngine();
 
+    Vector2 worldGravity;
+
     void logicLoop();
     void physicsLoop();
     void renderLoop();
 
-    void deserializeScene(const std::string& scenePath);
-    void serializeScene(const std::string& scenePath);
 
     std::mutex renderMutex;
     std::mutex physicsMutex;
@@ -40,15 +56,17 @@ private:
 
     std::shared_ptr<GameObject> root;
 
-    float physicsUpdateInterval;
-    float renderUpdateInterval;
-    float logicUpdateInterval;
+    float targetPhysicsUpdateInterval;
+    float targetLogicUpdateInterval;
+    float targetRenderUpdateInterval;
 
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastRenderTime;
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastPhysicsTime;
+    float lastPhysicsUpdateTime;
+    float lastLogicUpdateTime;
+    float lastRenderUpdateTime;
+
+    std::chrono::time_point<std::chrono::high_resolution_clock> lastRenderThreadUpdateTime;
+    std::chrono::time_point<std::chrono::high_resolution_clock> lastPhysicsThreadUpdateTime;
     std::chrono::time_point<std::chrono::high_resolution_clock> lastLogicThreadUpdateTime;
-
-    bool showMessageBox;
 
     bool isPlaying;
 

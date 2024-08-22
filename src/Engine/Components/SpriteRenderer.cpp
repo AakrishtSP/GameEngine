@@ -1,11 +1,11 @@
 #include "SpriteRenderer.hpp"
+#include <sys/stat.h>
 #include "../Component.hpp"
 #include "Transform2D.hpp"
 #include "raygui.h"
-#include <sys/stat.h>
 
 
-nlohmann::json SpriteRenderer::serialize() { 
+nlohmann::json SpriteRenderer::serialize() {
     nlohmann::json json;
     json["componentType"] = name;
     json["isActive"] = isActive;
@@ -17,8 +17,7 @@ nlohmann::json SpriteRenderer::serialize() {
     return json;
 }
 
-void SpriteRenderer::deserialize(const nlohmann::json& json)
-{
+void SpriteRenderer::deserialize(const nlohmann::json &json) {
     isActive = json["isActive"].get<bool>();
 
     offset.x = json["offset"][0].get<float>();
@@ -44,6 +43,7 @@ void SpriteRenderer::deserialize(const nlohmann::json& json)
 SpriteRenderer::SpriteRenderer() : offset(Vector2()), size(Vector2()) {
     // getTransform();
     name = "SpriteRenderer";
+    editorEditMode.resize(5, 0);
     texture = {0};
     image = {};
 };
@@ -56,7 +56,7 @@ SpriteRenderer::~SpriteRenderer() {
 
 void SpriteRenderer::loadImage(const std::string &filename) {
     std::lock_guard<std::mutex> lock(spriteMutex);
-    struct stat buffer{};
+    struct stat buffer {};
     if (stat(filename.c_str(), &buffer) != 0) {
         std::cerr << "File does not exist: " << filename << std::endl;
         return;
@@ -120,7 +120,7 @@ void SpriteRenderer::renderUpdate(float renderDeltaTime) {
     if (!transform) {
         getTransform();
     }
-    if(!isTextureInitialized && !image.data && !filename.empty()) {
+    if (!isTextureInitialized && !image.data && !filename.empty()) {
         loadImage(filename);
         resizeImage(size.x, size.y);
     }
@@ -136,7 +136,7 @@ Rectangle SpriteRenderer::drawInspector(Rectangle &previousRectangle) {
     float groupBoxWidth = previousRectangle.width - 2 * padding;
 
     // Initialize the height to accommodate the title of the group box
-    float groupBoxHeight = padding; 
+    float groupBoxHeight = padding;
     float currentY = previousRectangle.y + previousRectangle.height + padding;
 
     // Calculate positions for the first label and text boxes
@@ -147,44 +147,40 @@ Rectangle SpriteRenderer::drawInspector(Rectangle &previousRectangle) {
 
     // Draw and update height for each UI element
 
-    GuiLabel(Rectangle{ labelX, currentY, labelWidth, 20 }, "Offset");
-    GuiTextBox(Rectangle{ textBoxX, currentY, textBoxWidth / 2.0f - 5.0f, 20 }, &std::to_string(offset.x)[0u], 10, true); // x
-    GuiTextBox(Rectangle{ textBoxX + textBoxWidth / 2.0f + 5.0f, currentY, textBoxWidth / 2.0f - 5.0f, 20 }, &std::to_string(offset.y)[0u], 10, true); // y
+    GuiLabel(Rectangle{labelX, currentY, labelWidth, 20}, "Offset");
+    editorEditMode.at(0) = GuiTextBox(Rectangle{textBoxX, currentY, textBoxWidth / 2.0f - 5.0f, 20}, &std::to_string(offset.x)[0u], 10,
+               editorEditMode[0]); // x
+    editorEditMode.at(1) = GuiTextBox(Rectangle{textBoxX + textBoxWidth / 2.0f + 5.0f, currentY, textBoxWidth / 2.0f - 5.0f, 20},
+               &std::to_string(offset.y)[0u], 10, editorEditMode[1]); // y
     currentY += 30.0f; // Update currentY to next line
     groupBoxHeight += 30.0f; // Increment height
 
-    GuiLabel(Rectangle{ labelX, currentY, labelWidth, 20 }, "Scale");
-    GuiTextBox(Rectangle{ textBoxX, currentY, textBoxWidth, 20 }, &std::to_string(scale)[0u], 10, true); // scale
+    GuiLabel(Rectangle{labelX, currentY, labelWidth, 20}, "Scale");
+    editorEditMode.at(2) = GuiTextBox(Rectangle{textBoxX, currentY, textBoxWidth, 20}, &std::to_string(scale)[0u], 10, editorEditMode[2]); // scale
     currentY += 30.0f; // Update currentY to next line
     groupBoxHeight += 30.0f; // Increment height
 
-    GuiLabel(Rectangle{ labelX, currentY, labelWidth, 20 }, "Rotation");
-    GuiTextBox(Rectangle{ textBoxX, currentY, textBoxWidth, 20 }, &std::to_string(rotation)[0u], 10, true); // rotation
+    GuiLabel(Rectangle{labelX, currentY, labelWidth, 20}, "Rotation");
+    editorEditMode.at(3) = GuiTextBox(Rectangle{textBoxX, currentY, textBoxWidth, 20}, &std::to_string(rotation)[0u], 10, editorEditMode[3]); // rotation
     currentY += 30.0f; // Update currentY to next line
     groupBoxHeight += 30.0f; // Increment height
 
-    GuiLabel(Rectangle{ labelX, currentY, labelWidth, 20 }, "Filename");
-    GuiTextBox(Rectangle{ textBoxX, currentY, textBoxWidth, 20 }, &filename[0u], filename.length(), false); // filename
+    GuiLabel(Rectangle{labelX, currentY, labelWidth, 20}, "Filename");
+    editorEditMode.at(4) = GuiTextBox(Rectangle{textBoxX, currentY, textBoxWidth, 20}, &filename[0u], filename.length(), editorEditMode[4]); // filename
     currentY += 30.0f; // Update currentY to next line
     groupBoxHeight += 30.0f; // Increment height
 
     // Final group box position and size
     Rectangle groupBoxRect = {
-        previousRectangle.x + padding,
-        previousRectangle.y + previousRectangle.height + padding,
-        groupBoxWidth,
-        groupBoxHeight + padding // Add some padding at the bottom
+            previousRectangle.x + padding, previousRectangle.y + previousRectangle.height + padding, groupBoxWidth,
+            groupBoxHeight + padding // Add some padding at the bottom
     };
 
     // Draw the group box with the "SpriteRenderer" label
     GuiGroupBox(groupBoxRect, "SpriteRenderer");
 
-    Rectangle returnRect = {
-        previousRectangle.x,
-        previousRectangle.y,
-        previousRectangle.width,
-        groupBoxHeight + padding * 5
-    };
+    Rectangle returnRect = {previousRectangle.x, previousRectangle.y + previousRectangle.height,
+                            previousRectangle.width, groupBoxHeight + padding * 5};
 
     // Return the bounding rectangle for the entire group box
     return returnRect;
@@ -199,7 +195,8 @@ void SpriteRenderer::draw() {
         const float worldRotation = transform->getWorldRotation();
         const float worldScale = transform->getWorldScale();
 
-        DrawTextureEx(texture, position + offset - size * scale * worldScale / 2, worldRotation + rotation, scale, WHITE);
+        DrawTextureEx(texture, position + offset - size * scale * worldScale / 2, worldRotation + rotation, scale,
+                      WHITE);
         // std::cout << "Drawing sprite at: " << position.x << ", " << position.y << std::endl;
     } else {
         std::cerr << "Transform not available for drawing." << std::endl;

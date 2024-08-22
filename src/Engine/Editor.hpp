@@ -41,6 +41,8 @@ public:
     void drawInspector(std::shared_ptr<GameObject> gameObject);
     void drawHierarchy(std::shared_ptr<GameObject> gameObject, float x, float y, float& offsetY);
 
+    void drawStatistics();
+
     static bool GuiLabelButton(Rectangle rect, const char *text) ;
 
 private:

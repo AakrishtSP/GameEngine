@@ -40,4 +40,5 @@ protected:
     bool isActive = true;
     std::string name = "Component";
     GameObject* owner = nullptr;
+    std::vector<int> editorEditMode;
 };
