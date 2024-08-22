@@ -109,7 +109,7 @@ void Editor::drawHierarchy(std::shared_ptr<GameObject> gameObject,float x, float
         // Check if the label was clicked
     if (GuiLabelButton(Rectangle{ x + 25, y, labelWidth, 20 }, gameObject->getName().c_str())) {
         selectedGameObject = gameObject; // Set the selectedGameObject to the clicked one
-        std::cout << "Selected: " << selectedGameObject->getName() << std::endl;
+        // std::cout << "Selected: " << selectedGameObject->getName() << std::endl;
     }
 
     // If the node is expanded, draw the children

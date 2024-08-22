@@ -95,7 +95,15 @@ Vector2 CollisionManager::simplexSupportFunction(const Circle& circle1, const Ci
     return support1 - support2;
 }
 
-//Check if two rectangles collide
+void CollisionManager::updateAABBs(const std::vector<Collider> &colliders) {}
+
+bool CollisionManager::checkAABBCollision(const AABB &aabb1, const AABB &aabb2) const { return false; }
+
+void CollisionManager::buildBVH(const std::vector<Collider> &colliders) {}
+
+bool CollisionManager::checkBVHCollision(const BVHNode &node1, const BVHNode &node2) const { return false; }
+
+// Check if two rectangles collide
 bool CollisionManager::didCollide (Rect rect1, Rect rect2){
     Vector2 direction = Normalize(Vector2{rect2.x - rect1.x, rect2.y - rect1.y});
     Vector2 simplex1 = simplexSupportFunction(rect1, rect2, direction);

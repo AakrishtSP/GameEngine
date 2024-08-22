@@ -6,6 +6,7 @@
 #include "Components/Components.hpp"
 #include "GameEngine.hpp"
 #include "Editor.hpp"
+#include "CollisionManager.hpp"
 #include <nlohmann/json.hpp>
 
 // class EmptyComponent : public Component

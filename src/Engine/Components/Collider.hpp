@@ -13,23 +13,35 @@ public:
     Collider();
     ~Collider();
 
+    nlohmann::json serialize() override;
+
+    void deserialize(const nlohmann::json &j) override;
+
     void update(float deltatime) override;
     void renderUpdate(float renderDeltaTime) override{};
     void physicsUpdate(float fixedDeltaTime) override;
 
+    std::shared_ptr<CollisionShape> addCollisionShape(const CollisionShape& shape);
+    std::shared_ptr<CollisionShape> addCollisionShape(const Circle& circle, const Vector2& offset={0,0});
+    std::shared_ptr<CollisionShape> addCollisionShape(const Rectangle& rectangle, const Vector2& offset={0,0}, float rotation=0);
+
+    void removeCollisionShape(const std::shared_ptr<CollisionShape> &shape);
+
 private:
     mutable std::shared_ptr<Transform2D> transform = nullptr;
-    Rectangle rectangle;
-    Vector2 offset;
+    std::vector<std::shared_ptr<CollisionShape>> shapes;
 };
 
-class CollisionShape{
+class CollisionShape {
     bool isCircle;
     Circle circle;
     Rectangle rectangle;
     Vector2 offset;
     float rotation;
 public:
+    nlohmann::json serialize() ;
+    void deserialize(const nlohmann::json &j);
+
     CollisionShape(const Circle& circle, const Vector2& offset={0,0}) : circle(circle), offset(offset), isCircle(true) {}
     CollisionShape(const Rectangle& rectangle, const Vector2& offset={0,0}, float rotation=0) : rectangle(rectangle), offset(offset), rotation(rotation), isCircle(false) {}
     CollisionShape() : isCircle(false), rectangle({0,0,0,0}), offset({0,0}), rotation(0) {};
