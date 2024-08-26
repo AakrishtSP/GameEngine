@@ -29,7 +29,7 @@ Vector2 CollisionManager::directionToOrigin (Vector2 vec1, Vector2 vec2){
 
 //Distance of a non-positional vector to origin
 float CollisionManager::distanceToOrigin (Vector2 vec1, Vector2 vec2){
-    return Magnitude(vec1) * sin(Angle(vec1, directionToOrigin(vec1, vec2)));
+    return Magnitude(vec1) * cos(Angle(vec1, directionToOrigin(vec1, vec2) * -1));
 }
 //Returns Zero if the triangle contains the orign, else returns region in which the origin lies
 int CollisionManager::triangleContainOrigin (Vector2 oldVec1, Vector2 oldVec2, Vector2 recentVec){
