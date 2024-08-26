@@ -201,7 +201,7 @@ Vector2 CollisionManager::closestEdgetoOrigin(){
 }
 
 //For penetration vector of two rectangles
-template<class T>
+template<typename T>
 Vector2 CollisionManager::penetrationVector(T shp1, T shp2){
     if(!didCollide(shp1,shp2))
         return Vector2{0,0};

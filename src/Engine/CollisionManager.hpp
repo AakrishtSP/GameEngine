@@ -24,7 +24,7 @@ class CollisionManager{
     bool didCollide (Circle Cir, Rect rect){return didCollide(rect, Cir);};
 
     //For EPA
-    template<class T>
+    template<typename T>
     Vector2 penetrationVector(T rect1, T rect2);
     Vector2 closestEdgetoOrigin();
 

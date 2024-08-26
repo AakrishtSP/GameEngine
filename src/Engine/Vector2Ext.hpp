@@ -5,14 +5,12 @@
 
 typedef std::vector<Vector2> Polygon;
 
-class Circle {
-    public:
+struct Circle {
     Vector2 center;
     float radius;
 };
 
-class Rect {
-    public:
+struct Rect {
     float x;
     float y;
     float height;
