@@ -5,12 +5,14 @@
 
 typedef std::vector<Vector2> Polygon;
 
-struct Circle {
+class Circle {
+    public:
     Vector2 center;
     float radius;
 };
 
-struct Rect {
+class Rect {
+    public:
     float x;
     float y;
     float height;
@@ -112,3 +114,9 @@ inline void RotatePoint(Vector2& vec, Vector2 rotationPoint, float rotationAngle
     vec.x = x * cosA - y * sinA + rotationPoint.x;
     vec.y = x * sinA + y * cosA + rotationPoint.y;
 }
+
+//To create a vector with Magnitude and Direction
+inline Vector2 MakeVector(float magnitude, Vector2 direction){
+    return Normalize(direction) * magnitude;
+}
+

@@ -23,17 +23,23 @@ class CollisionManager{
     bool didCollide (Rect rect, Circle Cir);
     bool didCollide (Circle Cir, Rect rect){return didCollide(rect, Cir);};
 
-
+    //For EPA
+    template<class T>
+    Vector2 penetrationVector(T rect1, T rect2);
+    Vector2 closestEdgetoOrigin();
 
     int triangleContainOrigin (Vector2 vec1, Vector2 vec2, Vector2 vec3);
     bool pointPassedOrigin (Vector2 refrenceVec, Vector2 testingVec);
     bool pointPassedOrigin (Vector2 refrenceVec1, Vector2 refrenceVec2, Vector2 testingVec);
+    float distanceToOrigin (Vector2 vec1, Vector2 vec2);
     Vector2 directionToOrigin (Vector2 vec1, Vector2 vec2);
     Vector2 supportFunction(const Rect& rect, const Vector2& direction);
     Vector2 supportFunction(const Circle &circle, const Vector2 &direction);
     Vector2 simplexSupportFunction(const Rect& rect1,const Rect& rect2 ,const Vector2& direction);
     Vector2 simplexSupportFunction(const Rect& rect, const Circle& circle, const Vector2& direction);
     Vector2 simplexSupportFunction(const Circle& circle1, const Circle& circle2, const Vector2& direction);
+
+
 
 
     private:
@@ -43,6 +49,7 @@ class CollisionManager{
         //std::unordered_map<std::string, vector<>> creators;
         std::vector<AABB> aabbs;  // List of AABBs for broad-phase collision detection
         std::unique_ptr<BVHNode> bvhRoot;  // Root of the BVH tree
+        std::vector<Vector2> polytope;
 };
 
 // AABB structure definition
