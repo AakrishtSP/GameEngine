@@ -27,6 +27,10 @@ Vector2 CollisionManager::directionToOrigin (Vector2 vec1, Vector2 vec2){
     return Normalize(perpendiVec);
 }
 
+//Distance of a non-positional vector to origin
+float CollisionManager::distanceToOrigin (Vector2 vec1, Vector2 vec2){
+    return Magnitude(vec1) * sin(Angle(vec1, directionToOrigin(vec1, vec2)));
+}
 //Returns Zero if the triangle contains the orign, else returns region in which the origin lies
 int CollisionManager::triangleContainOrigin (Vector2 oldVec1, Vector2 oldVec2, Vector2 recentVec){
     Vector2 vecRecnet = recentVec * -1;
@@ -177,6 +181,42 @@ bool CollisionManager::didCollide (Circle Cir1, Circle Cir2){
         return false;
 }
 
+//For closest edge to origin
+Vector2 CollisionManager::closestEdgetoOrigin(){
+    int n = polytope.size();
+    Vector2 closestEdge = {0, n-1};
+    float minDistance = distanceToOrigin(polytope.at(0), polytope.at(n-1));
+    float distance;
+    float point1, point2;
+    for (int i = 0; i < n; i++){
+        point1 = i;
+        point2 = (i+1)%n;
+        distance = distanceToOrigin(polytope.at(point1), polytope.at(point2));
+        if (distance < minDistance){
+            minDistance = distance;
+            closestEdge = {point1, point2};
+        }
+    }
+    return closestEdge;
+}
+
+//For penetration vector of two rectangles
+template<class T>
+Vector2 CollisionManager::penetrationVector(T shp1, T shp2){
+    if(!didCollide(shp1,shp2))
+        return Vector2{0,0};
+    Vector2 closestEdge, newPolytope;
+    while(true){
+        closestEdge = closestEdgetoOrigin();
+        newPolytope = simplexSupportFunction(shp1, shp2, directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)));
+        if (newPolytope == polytope.at(closestEdge.x) || newPolytope == polytope.at(closestEdge.y)){
+            return directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)) * -1;
+        }
+        else
+            polytope.insert(polytope.begin() + closestEdge.y, newPolytope);
+    }
+
+}
 
 // AABB collision check
 bool AABB::intersects(const AABB& other) const {
