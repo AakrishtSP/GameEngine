@@ -210,7 +210,7 @@ Vector2 CollisionManager::penetrationVector(T shp1, T shp2){
         closestEdge = closestEdgetoOrigin();
         newPolytope = simplexSupportFunction(shp1, shp2, directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)));
         if (newPolytope == polytope.at(closestEdge.x) || newPolytope == polytope.at(closestEdge.y)){
-            return directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)) * -1;
+            return directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y));
         }
         else
             polytope.insert(polytope.begin() + closestEdge.y, newPolytope);
