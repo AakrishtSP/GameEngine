@@ -4,6 +4,7 @@
 Collider::Collider() {
     name = "Collider";
     editorEditMode.resize(6, 0);
+    CollisionManager::getInstance().addCollider(this);
 }
 
 Collider::~Collider() {}
@@ -28,28 +29,70 @@ void Collider::deserialize(const nlohmann::json &json) {
 
 void Collider::update(float deltaTime) {}
 
+void Collider::renderUpdate(float renderDeltaTime) {
+    for (auto &shape: shapes) {
+        if (shape->isCircle) {
+            Circle c = shape->getCircle();
+            DrawCircleV(c.center, c.radius, RED);
+        } else {
+            // Rect r = Transform2D::ToGameRect(shape->getRectangle());
+            Rect r = shape->getRectangle();
+
+
+
+            Rectangle rec = {r.x, r.y, r.width, r.height};
+            DrawRectanglePro(rec, Vector2{r.width / 2, r.height / 2}, r.rotation, RED);
+        }
+    }
+
+    //     if (!isTextureInitialized) {
+    //     initTexture();
+    // }
+    // if (transform) {
+    //     const Vector2 position = transform->getGamePosition();
+    //     const float worldRotation = transform->getWorldRotation();
+    //     const float worldScale = transform->getWorldScale();
+
+    //     DrawTextureEx(texture, position + offset - size * scale * worldScale / 2, worldRotation + rotation, scale,
+    //                   WHITE);
+    //     // std::cout << "Drawing sprite at: " << position.x << ", " << position.y << std::endl;
+    // } else {
+    //     std::cerr << "Transform not available for drawing." << std::endl;
+    // }
+}
+
 void Collider::physicsUpdate(float fixedDeltaTime) {
-    // CollisionManager::getInstance().addCollider(this);
 }
 
 std::shared_ptr<CollisionShape> Collider::addCollisionShape(const CollisionShape &shape) {
     std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(shape);
-    shapes.push_back(shapePtr);
+    addCollisionShape(shapePtr);
     return shapePtr;
 }
 
 std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Circle &circle) {
     std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(circle);
-    shapes.push_back(shapePtr);
+    addCollisionShape(shapePtr);
     return shapePtr;
 }
+
 
 std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Rectangle &rectangle,
                                                             float rotation) {
     std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(rectangle, rotation);
-    shapes.push_back(shapePtr);
+    addCollisionShape(shapePtr);
     return shapePtr;
 }
+
+std::shared_ptr<CollisionShape> Collider::addCollisionShape(std::shared_ptr<CollisionShape> shape) {
+    shapes.push_back(shape);
+    shape->setCollider(this);
+    shape->setGameObject(owner);
+    shape->getTransform();
+    CollisionManager::getInstance().addCollider(this);
+    return shape;
+}
+
 
 void Collider::removeCollisionShape(const std::shared_ptr<CollisionShape> &shape) {
     shapes.erase(std::remove(shapes.begin(), shapes.end(), shape), shapes.end());
@@ -110,7 +153,7 @@ void CollisionShape::setCollider(Collider *collider) {
 }
 
 
-Rectangle CollisionShape::getBoundingBox() const {
+Rectangle CollisionShape::getBoundingBox() {
     std::shared_ptr<Transform2D> transform = owner->getComponent<Transform2D>();
     if (transform == nullptr) {
         return {0, 0, 0, 0};
@@ -145,7 +188,7 @@ Rect CollisionShape::getRectangle() const {
     r.y = owner->getComponent<Transform2D>()->getWorldPosition().y+rectangle.y;
     r.width = rectangle.width;
     r.height = rectangle.height;
-    r.rotation = rotation;
+    r.rotation = owner->getComponent<Transform2D>()->getWorldRotation() + rotation;
     return r;
 };
 
@@ -170,6 +213,17 @@ void CollisionShape::deserialize(const nlohmann::json &json) {
     rectangle.y = json["rectangle"][1].get<float>();
     rectangle.width = json["rectangle"][2].get<float>();
     rectangle.height = json["rectangle"][3].get<float>();
+}
+
+void CollisionShape::getTransform() {
+    if (!owner) {
+        std::cerr << "owner not found" << std::endl;
+        return;
+    }
+    transform = owner->getComponent<Transform2D>();
+    if (!transform) {
+        transform = owner->addComponent<Transform2D>();
+    }
 }
 
 Rectangle CollisionShape::drawInspector(Rectangle &previousRectangle) {

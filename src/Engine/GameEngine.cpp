@@ -11,8 +11,6 @@ GameEngine::GameEngine() :
     lastRenderThreadUpdateTime = std::chrono::high_resolution_clock::now();
     lastPhysicsThreadUpdateTime = std::chrono::high_resolution_clock::now();
     lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
-
-    registerComponents();
 }
 
 GameEngine::~GameEngine() {
@@ -28,6 +26,7 @@ GameEngine::~GameEngine() {
 void GameEngine::init() {
     constexpr int screenWidth = 1280;
     constexpr int screenHeight = 720;
+    registerComponents();
 
     worldGravity = {0.0f, -9.8f};
 
@@ -44,6 +43,7 @@ void GameEngine::init() {
     std::cout << "Current Working Directory: " << currentPath << std::endl;
 
     Editor::getInstance().init();
+    CollisionManager::getInstance();
 
 
     SetTargetFPS(60); // Set the target frames-per-second

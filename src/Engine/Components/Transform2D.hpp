@@ -8,6 +8,8 @@ class Transform2D final : public Component
 public:
     Transform2D();
 
+    static Rect ToGameRect(const Rect& rect);
+
     nlohmann::json serialize() override;
     void deserialize(const nlohmann::json &json) override;
 

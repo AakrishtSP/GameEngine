@@ -1,10 +1,16 @@
 #pragma once
 #include "Components/Collider.hpp"
 #include "Vector2Ext.hpp"
+#include <thread>
+#include <mutex>
+#include <future>
 #include <set>
 
 class AABB;
 class BVHNode;
+class Collider;
+class CollisionShape;
+class GameObject;
 class CollisionManager {
 public:
     static CollisionManager &getInstance() {
@@ -44,9 +50,9 @@ public:
     Vector2 simplexSupportFunction(const Circle &circle, const Rect &rect, const Vector2 &direction) { return simplexSupportFunction(rect, circle, direction); }
 
     void update(float deltaTime);
-    void renderUpdate(float renderDeltaTime);
+    void renderUpdate(float renderDeltaTime){};
 
-    // void addCollider(const Collider *collider);
+    void addCollider(Collider *collider);
     void resetColliders();
 
     void checkBroadCollisions();
@@ -66,7 +72,7 @@ private:
     CollisionManager &operator=(const CollisionManager &) = delete;
 
     std::unique_ptr<BVHNode> bvhRoot; // Root of the BVH tree
-    std::vector<std::shared_ptr<Collider>> colliders; // List of colliders
+    std::vector<Collider*> colliders; // List of colliders
     std::vector<std::shared_ptr<CollisionShape>> shapes; // List of collision shapes
     std::vector<std::vector<std::shared_ptr<CollisionShape>>>
             potentialCollisions; // List of colliders that are potentially colliding
@@ -76,6 +82,9 @@ private:
             potentialCollisionsGO; // List of GameObjects that are potentially colliding
     std::vector<std::vector<std::shared_ptr<GameObject>>>
             actualCollisionsGO; // List of GameObjects that are actually colliding
+
+
+
     std::vector<Vector2> polytope;
 };
 
@@ -86,7 +95,7 @@ public:
     Vector2 max;
     AABB() : min(Vector2({0, 0})), max(Vector2({0, 0})) {};
     AABB(const Vector2 &min, const Vector2 &max) : min(min), max(max) {}
-    AABB(const CollisionShape &shape);
+    AABB(CollisionShape &shape);
     AABB(const Circle &circle);
     AABB(const Rect &rect);
     AABB(const Rectangle &rect);
@@ -101,6 +110,7 @@ public:
     std::vector<std::shared_ptr<CollisionShape>> colliders; // Colliders within this node
     std::unique_ptr<BVHNode> left;
     std::unique_ptr<BVHNode> right;
+    std::mutex bvhMutex;
 
     BVHNode() = default;
     BVHNode(const AABB &box) : boundingBox(box) {}
