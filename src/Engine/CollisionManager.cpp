@@ -360,6 +360,9 @@ AABB AABB::merge(const AABB &other) {
 
 
 AABB BVHNode::calculateBoundingBox() {
+    if (colliders.empty()) {
+        return AABB();
+    }
     boundingBox = colliders.front()->getBoundingBox();
     for (const auto &collider: colliders) {
         boundingBox.merge(collider->getBoundingBox());
@@ -368,6 +371,10 @@ AABB BVHNode::calculateBoundingBox() {
 }
 
 void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
+    if (colliders.size() <= minColliders || currentDepth >= maxDepth) {
+        return;
+    }
+    // Calculate the bounding box of the current node
     calculateBoundingBox();
 
     // Check vertical or horizontal split
@@ -424,11 +431,11 @@ void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
     if (left->colliders.size() > minColliders && currentDepth < maxDepth) {
         left->subdivide(currentDepth + 1, maxDepth, minColliders);
     } else {
-
+        CollisionManager::getInstance().addPossibleCollision(left->colliders);
     }
     if (right->colliders.size() > minColliders && currentDepth < maxDepth) {
         right->subdivide(currentDepth + 1, maxDepth, minColliders);
     } else {
-
+        CollisionManager::getInstance().addPossibleCollision(right->colliders);
     }
 }
