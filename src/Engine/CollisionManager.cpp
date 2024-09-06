@@ -132,6 +132,36 @@ void CollisionManager::checkBroadCollisions() {
 }
 
 void CollisionManager::checkNarrowCollisions() {
+    //for std::vector<std::vector<std::shared_ptr<CollisionShape>>> potentialCollisions
+    int potentialCollisionSize = potentialCollisions.size();
+    int n;
+    bool ifColide;
+    for(int i = 0; i < potentialCollisionSize; i++){
+        n = potentialCollisions[i].size();
+        for (int j = 0; j < n; j++){
+            for (int k = j+1; k < n; k++){
+                switch (potentialCollisions[i][k]->whatShape()*10 + potentialCollisions[i][k]->whatShape())
+                {
+                    case 11:
+                        ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());
+                        break;
+                    case 12:
+                        ifColide = ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());
+                        break;
+                    case 21:
+                        ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());
+                        break;
+                    case 22:
+                        ifColide = ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());
+                        break;
+                    default:
+                        break;
+                }
+                if (ifColide)
+                    addActualCollision(potentialCollisions[i][j],potentialCollisions[i][k]);
+            }
+        }
+    }
 }
 
 void CollisionManager::resolveCollisions() {}
@@ -147,8 +177,9 @@ void CollisionManager::addPossibleCollision(std::vector<std::shared_ptr<Collisio
     potentialCollisionsGO.push_back(colShapesGO);
 }
 
-void CollisionManager::addActualCollision(const std::shared_ptr<CollisionShape> &shape1,
-                                          const std::shared_ptr<CollisionShape> &shape2) {}
+void CollisionManager::addActualCollision(const std::shared_ptr<CollisionShape> &shape1, const std::shared_ptr<CollisionShape> &shape2){
+    actualCollisions.push_back(std::vector<std::shared_ptr<CollisionShape>>({shape1, shape2}));
+}
 
 void CollisionManager::resetCollisions() {
     actualCollisions.clear();
@@ -169,8 +200,8 @@ Vector2 CollisionManager::GJKinitialDirection(const Circle &circle1, const Circl
 }
 
 // Check if two Shapes collide
-template<typename Tm>
-bool CollisionManager::didCollide(Tm shape1, Tm shape2) {
+template<typename Tm1, typename Tm2>
+bool CollisionManager::didCollide(Tm1 shape1, Tm2 shape2) {
     polytope.clear();
     Vector2 direction = GJKinitialDirection(shape1, shape2);
     Vector2 simplex1 = simplexSupportFunction(shape1, shape2, direction);
@@ -269,8 +300,8 @@ Vector2 CollisionManager::closestEdgetoOrigin() {
 }
 
 // For penetration vector of two rectangles
-template<typename T>
-Vector2 CollisionManager::penetrationVector(T shp1, T shp2) {
+template<typename T1, typename T2>
+Vector2 CollisionManager::penetrationVector(T1 shp1, T2 shp2) {
     if (!didCollide(shp1, shp2))
         return Vector2{0, 0};
     Vector2 closestEdge, newPolytope;

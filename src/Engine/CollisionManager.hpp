@@ -13,8 +13,8 @@ public:
     }
 
     //For GJK
-    template<typename Tm>
-    bool didCollide(Tm shape1, Tm shape2);
+    template<typename Tm1,typename Tm2>
+    bool didCollide(Tm1 shape1, Tm2 shape2);
     /*bool didCollide(Rect rect1, Rect rect2);
     bool didCollide(Circle Cir1, Circle Cir2);
     bool didCollide(Rect rect, Circle Cir);
@@ -22,8 +22,8 @@ public:
 
 
     // For EPA
-    template<typename T>
-    Vector2 penetrationVector(T rect1, T rect2);
+    template<typename T1, typename T2>
+    Vector2 penetrationVector(T1 shp1, T2 shp2);
     Vector2 closestEdgetoOrigin();
 
     int triangleContainOrigin(Vector2 vec1, Vector2 vec2, Vector2 vec3);
@@ -35,11 +35,13 @@ public:
     Vector2 GJKinitialDirection(const Rect &rect1, const Rect &rect2);
     Vector2 GJKinitialDirection(const Rect &rect, const Circle &circle);
     Vector2 GJKinitialDirection(const Circle &circle1, const Circle &circle2);
+    Vector2 GJKinitialDirection(const Circle &circle, const Rect &rect){return GJKinitialDirection(rect, circle); }
     Vector2 supportFunction(const Rect &rect, const Vector2 &direction);
     Vector2 supportFunction(const Circle &circle, const Vector2 &direction);
     Vector2 simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction);
     Vector2 simplexSupportFunction(const Rect &rect, const Circle &circle, const Vector2 &direction);
     Vector2 simplexSupportFunction(const Circle &circle1, const Circle &circle2, const Vector2 &direction);
+    Vector2 simplexSupportFunction(const Circle &circle, const Rect &rect, const Vector2 &direction) { return simplexSupportFunction(rect, circle, direction); }
 
     void update(float deltaTime);
     void renderUpdate(float renderDeltaTime);
