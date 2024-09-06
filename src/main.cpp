@@ -5,6 +5,7 @@ int main() {
     GameEngine& engine = GameEngine::getInstance();
     engine.init();
     engine.setWorldGravity({0, -1000});
+    engine.setPhysicsUpdateInterval(1.0f / 120.0f);
 
     // engine.deserializeScene("../Data/data.json");
 
@@ -38,10 +39,12 @@ int main() {
     child1Sprite->getTransform();
     auto script = child1.addComponent<ScriptLoader>();
     auto rigidBody = child1.addComponent<RigidBody2D>();
+    rigidBody->setMoveable(false);
     auto collider = child1.addComponent<Collider>();
-    collider->addCollisionShape(Rectangle{0, 0, 100, 100});
+    collider->addCollisionShape(Rectangle{0, 0, 150, 150});
 
-    child2.addComponent<RigidBody2D>();
+    auto rb = child2.addComponent<RigidBody2D>();
+    rb->setMoveable(false);
     const auto child2Transform = child2.addComponent<Transform2D>();
     const auto child2Sprite = child2.addComponent<SpriteRenderer>();
     auto collider2 = child2.addComponent<Collider>();
@@ -52,7 +55,7 @@ int main() {
     child2Sprite->initTexture();
     child2Transform->setPosition({-100, -100});
     child2Sprite->getTransform();
-    collider2->addCollisionShape(Rectangle{-100, -100, 150, 150});
+    collider2->addCollisionShape(Rectangle{0, 0, 200, 200});
 
 
 

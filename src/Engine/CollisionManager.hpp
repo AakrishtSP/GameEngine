@@ -78,7 +78,7 @@ private:
             potentialCollisions; // List of colliders that are potentially colliding
     std::vector<std::vector<std::shared_ptr<CollisionShape>>>
             actualCollisions; // List of colliders that are actually colliding
-    std::vector<std::vector<std::shared_ptr<GameObject>>>
+    std::vector<std::vector<GameObject*>>
             potentialCollisionsGO; // List of GameObjects that are potentially colliding
     std::vector<std::vector<std::shared_ptr<GameObject>>>
             actualCollisionsGO; // List of GameObjects that are actually colliding
@@ -119,4 +119,6 @@ public:
     AABB calculateBoundingBox();
 
     void subdivide(int currentDepth, int maxDepth = 10, int minColliders = 1);
+
+    ~BVHNode()= default;
 };

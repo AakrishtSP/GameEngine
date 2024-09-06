@@ -44,8 +44,8 @@ private:
 class CollisionShape {
 public:
 
-    GameObject* owner;
-    Collider* collider;
+    GameObject *owner;
+    Collider *collider;
     bool isCircle;
     Circle circle;
     Rectangle rectangle;

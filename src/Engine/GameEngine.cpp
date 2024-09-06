@@ -6,8 +6,8 @@ GameEngine &GameEngine::getInstance() {
 }
 
 GameEngine::GameEngine() :
-    targetPhysicsUpdateInterval(1.0f / 60.0f), targetRenderUpdateInterval(1.0f / 60.0f), targetLogicUpdateInterval(1.0f / 60.0f),
-    worldGravity({0.0f, 9.8f}), isPlaying(false) {
+    targetPhysicsUpdateInterval(1.0f / 60.0f), targetRenderUpdateInterval(1.0f / 60.0f),
+    targetLogicUpdateInterval(1.0f / 60.0f), worldGravity({0.0f, 9.8f}), isPlaying(false) {
     lastRenderThreadUpdateTime = std::chrono::high_resolution_clock::now();
     lastPhysicsThreadUpdateTime = std::chrono::high_resolution_clock::now();
     lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
@@ -91,6 +91,9 @@ void GameEngine::logicLoop() {
         } else {
             lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
         }
+        if (WindowShouldClose()) {
+            isPlaying = false;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }
 }
@@ -112,6 +115,9 @@ void GameEngine::physicsLoop() {
 
         } else {
             lastPhysicsThreadUpdateTime = std::chrono::high_resolution_clock::now();
+        }
+        if (WindowShouldClose()) {
+            isPlaying = false;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }
@@ -141,6 +147,9 @@ void GameEngine::renderLoop() {
             lastRenderUpdateTime = elapsed;
             lastRenderThreadUpdateTime = now;
             EndDrawing();
+        }
+        if (WindowShouldClose()) {
+            isPlaying = false;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }
