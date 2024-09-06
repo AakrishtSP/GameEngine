@@ -78,5 +78,6 @@ public:
     operator Circle() const { return (isCircle) ? Circle{circle.center,circle.radius} : Circle{{0,0},0}; }
     operator Rect() const { return (!isCircle) ? Rect{rectangle.x,rectangle.y,rectangle.width,rectangle.height, rotation}: Rect{0,0,0,0}; }
 
-    bool ifCircle() {return isCircle;}
+    //bool ifCircle() {return isCircle;}
+    int whatShape(){ return (isCircle)? 1 : 2;}
 };
