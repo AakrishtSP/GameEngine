@@ -104,6 +104,7 @@ void GameEngine::physicsLoop() {
             if (physicsElapsed >= targetPhysicsUpdateInterval) {
                 std::lock_guard<std::mutex> lock(physicsMutex);
                 root->physicsUpdate(physicsElapsed);
+                CollisionManager::getInstance().update(physicsElapsed);
 
                 lastPhysicsUpdateTime = physicsElapsed;
                 lastPhysicsThreadUpdateTime = now;

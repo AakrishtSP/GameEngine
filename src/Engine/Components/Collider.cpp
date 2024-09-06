@@ -28,7 +28,9 @@ void Collider::deserialize(const nlohmann::json &json) {
 
 void Collider::update(float deltaTime) {}
 
-void Collider::physicsUpdate(float fixedDeltaTime) {}
+void Collider::physicsUpdate(float fixedDeltaTime) {
+    // CollisionManager::getInstance().addCollider(this);
+}
 
 std::shared_ptr<CollisionShape> Collider::addCollisionShape(const CollisionShape &shape) {
     std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(shape);
@@ -36,15 +38,15 @@ std::shared_ptr<CollisionShape> Collider::addCollisionShape(const CollisionShape
     return shapePtr;
 }
 
-std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Circle &circle, const Vector2 &offset) {
-    std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(circle, offset);
+std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Circle &circle) {
+    std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(circle);
     shapes.push_back(shapePtr);
     return shapePtr;
 }
 
-std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Rectangle &rectangle, const Vector2 &offset,
+std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Rectangle &rectangle,
                                                             float rotation) {
-    std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(rectangle, offset, rotation);
+    std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(rectangle, rotation);
     shapes.push_back(shapePtr);
     return shapePtr;
 }
@@ -88,22 +90,68 @@ Rectangle Collider::drawInspector(Rectangle &previousRectangle) {
 }
 
 
-CollisionShape::CollisionShape(const Circle &circle, const Vector2 &offset = {0, 0}) :
-    circle(circle), offset(offset), isCircle(true) {
+CollisionShape::CollisionShape(const Circle &circle): circle(circle), isCircle(true), rotation(0), rectangle({0, 0, 0, 0}) {
     editorEditMode.resize(6, 0);
     }
-CollisionShape::CollisionShape(const Rectangle &rectangle, const Vector2 &offset = {0, 0}, float rotation = 0) :
-    rectangle(rectangle), offset(offset), rotation(rotation), isCircle(false) {
+CollisionShape::CollisionShape(const Rectangle &rectangle, float rotation = 0) :
+    rectangle(rectangle), rotation(rotation), isCircle(false) {
     editorEditMode.resize(6, 0);
     }
-CollisionShape::CollisionShape() : isCircle(false), rectangle({0, 0, 0, 0}), offset({0, 0}), rotation(0) {
+CollisionShape::CollisionShape() : isCircle(false), rectangle({0, 0, 0, 0}), rotation(0), circle({{0, 0}, 0}) {
     editorEditMode.resize(6, 0);
+}
+void CollisionShape::setGameObject(GameObject *owner) {
+    this->owner = owner;
+    collider = owner->getComponent<Collider>().get();
+}
+void CollisionShape::setCollider(Collider *collider) {
+    this->collider = collider;
+    owner = collider->getOwner();
+}
+
+
+Rectangle CollisionShape::getBoundingBox() const {
+    std::shared_ptr<Transform2D> transform = owner->getComponent<Transform2D>();
+    if (transform == nullptr) {
+        return {0, 0, 0, 0};
+    }
+    Rectangle rect;
+    rect.x = transform->getWorldPosition().x;
+    rect.y = transform->getWorldPosition().y;
+    if (isCircle) {
+        rect.width = circle.radius * 2;
+        rect.height = circle.radius * 2;
+    } else {
+        float rot = transform->getWorldRotation() + rotation;
+        float sinRot = sinf(rot);
+        float cosRot = cosf(rot);
+        Vector2 halfSize = {rectangle.width / 2, rectangle.height / 2};
+        Vector2 rotatedHalfSize = {halfSize.x * cosRot - halfSize.y * sinRot,
+                                   halfSize.x * sinRot + halfSize.y * cosRot};
+        rect.width = fabsf(rotatedHalfSize.x) * 2;
+        rect.height = fabsf(rotatedHalfSize.y) * 2;
+    }
+    return rect;
+}
+Circle CollisionShape::getCircle() const { 
+    Circle c;
+    c.center = owner->getComponent<Transform2D>()->getWorldPosition()+circle.center;
+    c.radius = circle.radius;
+    return c;
+ }
+Rect CollisionShape::getRectangle() const { 
+    Rect r;
+    r.x = owner->getComponent<Transform2D>()->getWorldPosition().x+rectangle.x;
+    r.y = owner->getComponent<Transform2D>()->getWorldPosition().y+rectangle.y;
+    r.width = rectangle.width;
+    r.height = rectangle.height;
+    r.rotation = rotation;
+    return r;
 };
 
 nlohmann::json CollisionShape::serialize() {
     nlohmann::json json;
     json["isCircle"] = isCircle;
-    json["offset"] = {offset.x, offset.y};
     json["rotation"] = rotation;
     json["circle"] = {circle.center.x, circle.center.y, circle.radius};
     json["rectangle"] = {rectangle.x, rectangle.y, rectangle.width, rectangle.height};
@@ -112,8 +160,6 @@ nlohmann::json CollisionShape::serialize() {
 
 void CollisionShape::deserialize(const nlohmann::json &json) {
     isCircle = json["isCircle"].get<bool>();
-    offset.x = json["offset"][0].get<float>();
-    offset.y = json["offset"][1].get<float>();
     rotation = json["rotation"].get<float>();
 
     circle.center.x = json["circle"][0].get<float>();
@@ -183,15 +229,6 @@ Rectangle CollisionShape::drawInspector(Rectangle &previousRectangle) {
         currentY += 30.0f; // Update currentY to next line
         groupBoxHeight += 30.0f; // Increment height
     }
-
-    GuiLabel(Rectangle{labelX, currentY, labelWidth, 20}, "Offset");
-    editorEditMode.at(4) = GuiTextBox(Rectangle{textBoxX, currentY, textBoxWidth / 2.0f - 5.0f, 20},
-                                      &std::to_string(offset.x)[0u], 10, editorEditMode[4]); // x
-    editorEditMode.at(5) =
-            GuiTextBox(Rectangle{textBoxX + textBoxWidth / 2.0f + 5.0f, currentY, textBoxWidth / 2.0f - 5.0f, 20},
-                       &std::to_string(offset.y)[0u], 10, editorEditMode[5]); // y
-    currentY += 30.0f; // Update currentY to next line
-    groupBoxHeight += 30.0f; // Increment height
 
     Rectangle returnRect = {previousRectangle.x, previousRectangle.y + previousRectangle.height,
                             previousRectangle.width, groupBoxHeight + padding};

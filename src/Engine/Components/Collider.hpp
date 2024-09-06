@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Component.hpp"
+// #include "../CollisionManager.hpp"
 #include "Transform2D.hpp"
 
 class Transform2D;
@@ -22,8 +23,8 @@ public:
     void physicsUpdate(float fixedDeltaTime) override;
 
     std::shared_ptr<CollisionShape> addCollisionShape(const CollisionShape& shape);
-    std::shared_ptr<CollisionShape> addCollisionShape(const Circle& circle, const Vector2& offset={0,0});
-    std::shared_ptr<CollisionShape> addCollisionShape(const Rectangle& rectangle, const Vector2& offset={0,0}, float rotation=0);
+    std::shared_ptr<CollisionShape> addCollisionShape(const Circle& circle);
+    std::shared_ptr<CollisionShape> addCollisionShape(const Rectangle& rectangle, float rotation=0);
 
     void removeCollisionShape(const std::shared_ptr<CollisionShape> &shape);
 
@@ -38,10 +39,11 @@ private:
 };
 
 class CollisionShape {
+    GameObject* owner;
+    Collider* collider;
     bool isCircle;
     Circle circle;
     Rectangle rectangle;
-    Vector2 offset;
     float rotation;
     // std::vector<int> layer;
     // std::vector<int> mask;
@@ -52,21 +54,27 @@ public:
 
     Rectangle drawInspector(Rectangle& rectangle);
 
-    CollisionShape(const Circle& circle, const Vector2& offset);
-    CollisionShape(const Rectangle& rectangle, const Vector2& offset, float rotation);
+    CollisionShape(const Circle& circle);
+    CollisionShape(const Rectangle& rectangle, float rotation);
     CollisionShape();
 
-    void setOffset(const Vector2& offset) { this->offset = offset; }
+    void setGameObject(GameObject* owner);
+    void setCollider(Collider* collider);
+    [[nodiscard]] GameObject* getGameObject() const { return owner; }
+    [[nodiscard]] Collider* getCollider() const { return collider; }
+
+    Rectangle getBoundingBox() const;
+
     void setRotation(float rotation) { this->rotation = rotation; }
-    void setCircle(const Circle& circle, const Vector2& offset={0,0}) { this->circle = Circle{circle.center+offset,circle.radius}; isCircle = true; }
-    void setCircle(const Vector2& center, float radius, const Vector2& offset={0,0}) { circle = Circle{center+offset, radius}; isCircle = true; }
+    void setCircle(const Circle& circle) { this->circle = Circle{circle.center,circle.radius}; isCircle = true; }
+    void setCircle(const Vector2& center, float radius) { circle = Circle{center, radius}; isCircle = true; }
 
-    void setRectangle(const Rectangle& rectangle, const Vector2& offset={0,0}, float rotation=0.0f) { this->rectangle = rectangle; this->offset = offset; this->rotation = rotation; isCircle = false; }
-    void setRectangle(float x, float y, float width, float height, const Vector2& offset={0,0}, float rotation=0.0f) { rectangle = Rectangle{x,y,width,height}; this->offset = offset; this->rotation = rotation; isCircle = false; }
+    void setRectangle(const Rectangle& rectangle, float rotation=0.0f) { this->rectangle = rectangle; this->rotation = rotation; isCircle = false; }
+    void setRectangle(float x, float y, float width, float height, float rotation=0.0f) { rectangle = Rectangle{x,y,width,height}; this->rotation = rotation; isCircle = false; }
 
-    Circle getCircle() const { return (isCircle) ? Circle{circle.center+offset,circle.radius} : Circle{{0,0},0}; }
-    Rect getRectangle() const { return (!isCircle) ? Rect{rectangle.x+offset.x,rectangle.y+offset.y,rectangle.width,rectangle.height, rotation}: Rect{0,0,0,0}; }
+    Circle getCircle() const;
+    Rect getRectangle() const;
 
-    operator Circle() const { return (isCircle) ? Circle{circle.center+offset,circle.radius} : Circle{{0,0},0}; }
-    operator Rect() const { return (!isCircle) ? Rect{rectangle.x+offset.x,rectangle.y+offset.y,rectangle.width,rectangle.height, rotation}: Rect{0,0,0,0}; }
+    operator Circle() const { return (isCircle) ? Circle{circle.center,circle.radius} : Circle{{0,0},0}; }
+    operator Rect() const { return (!isCircle) ? Rect{rectangle.x,rectangle.y,rectangle.width,rectangle.height, rotation}: Rect{0,0,0,0}; }
 };
