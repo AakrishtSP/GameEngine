@@ -12,10 +12,14 @@ public:
         return instance;
     }
 
-    bool didCollide(Rect rect1, Rect rect2);
+    //For GJK
+    template<typename Tm>
+    bool didCollide(Tm shape1, Tm shape2);
+    /*bool didCollide(Rect rect1, Rect rect2);
     bool didCollide(Circle Cir1, Circle Cir2);
     bool didCollide(Rect rect, Circle Cir);
-    bool didCollide(Circle Cir, Rect rect) { return didCollide(rect, Cir); };
+    bool didCollide(Circle Cir, Rect rect) { return didCollide(rect, Cir); };*/
+
 
     // For EPA
     template<typename T>
@@ -27,6 +31,10 @@ public:
     bool pointPassedOrigin(Vector2 refrenceVec1, Vector2 refrenceVec2, Vector2 testingVec);
     float distanceToOrigin(Vector2 vec1, Vector2 vec2);
     Vector2 directionToOrigin(Vector2 vec1, Vector2 vec2);
+
+    Vector2 GJKinitialDirection(const Rect &rect1, const Rect &rect2);
+    Vector2 GJKinitialDirection(const Rect &rect, const Circle &circle);
+    Vector2 GJKinitialDirection(const Circle &circle1, const Circle &circle2);
     Vector2 supportFunction(const Rect &rect, const Vector2 &direction);
     Vector2 supportFunction(const Circle &circle, const Vector2 &direction);
     Vector2 simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction);
@@ -66,8 +74,6 @@ private:
             potentialCollisionsGO; // List of GameObjects that are potentially colliding
     std::vector<std::vector<std::shared_ptr<GameObject>>>
             actualCollisionsGO; // List of GameObjects that are actually colliding
-
-
     std::vector<Vector2> polytope;
 };
 

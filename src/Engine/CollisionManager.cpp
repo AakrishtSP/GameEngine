@@ -131,7 +131,8 @@ void CollisionManager::checkBroadCollisions() {
     bvhRoot->subdivide(0, 10, 1);
 }
 
-void CollisionManager::checkNarrowCollisions() {}
+void CollisionManager::checkNarrowCollisions() {
+}
 
 void CollisionManager::resolveCollisions() {}
 
@@ -156,32 +157,49 @@ void CollisionManager::resetCollisions() {
     potentialCollisionsGO.clear();
 }
 
+//To get initial direction for GJK
+Vector2 CollisionManager::GJKinitialDirection(const Rect &rect1, const Rect &rect2) {
+    return Normalize(Vector2{rect2.x - rect1.x, rect2.y - rect1.y});
+}
+Vector2 CollisionManager::GJKinitialDirection(const Rect &rect, const Circle &circle) {
+    return Normalize(Vector2{circle.center.x - rect.x, circle.center.y - rect.y});
+}
+Vector2 CollisionManager::GJKinitialDirection(const Circle &circle1, const Circle &circle2) {
+    return Normalize(Vector2{circle2.center.x - circle1.center.x, circle2.center.y - circle1.center.y});
+}
 
-// Check if two rectangles collide
-bool CollisionManager::didCollide(Rect rect1, Rect rect2) {
-    Vector2 direction = Normalize(Vector2{rect2.x - rect1.x, rect2.y - rect1.y});
-    Vector2 simplex1 = simplexSupportFunction(rect1, rect2, direction);
+// Check if two Shapes collide
+template<typename Tm>
+bool CollisionManager::didCollide(Tm shape1, Tm shape2) {
+    polytope.clear();
+    Vector2 direction = GJKinitialDirection(shape1, shape2);
+    Vector2 simplex1 = simplexSupportFunction(shape1, shape2, direction);
     direction = Normalize(simplex1 * -1);
-    Vector2 simplex2 = simplexSupportFunction(rect1, rect2, direction);
+    Vector2 simplex2 = simplexSupportFunction(shape1, shape2, direction);
+
     if (!pointPassedOrigin(simplex1, simplex2))
         return false;
 
     direction = directionToOrigin(simplex1, simplex2);
-    Vector2 simplex3 = simplexSupportFunction(rect1, rect2, direction);
+    Vector2 simplex3 = simplexSupportFunction(shape1, shape2, direction);
     Vector2 newSimplex;
     int region;
     while (true) {
         if (!pointPassedOrigin(simplex1, simplex2, simplex3))
             return false;
         region = triangleContainOrigin(simplex1, simplex2, simplex3);
-        if (region == 0)
+        if (region == 0){
+            polytope.push_back(simplex1);
+            polytope.push_back(simplex2);
+            polytope.push_back(simplex3);
             return true;
+        }
         else if (region == 1)
             simplex2 = simplex3;
         else if (region == 2)
             simplex1 = simplex3;
         direction = directionToOrigin(simplex1, simplex2);
-        newSimplex = simplexSupportFunction(rect1, rect2, direction);
+        newSimplex = simplexSupportFunction(shape1, shape2, direction);
         if (newSimplex == simplex1 || newSimplex == simplex2)
             return false;
         else
@@ -190,9 +208,9 @@ bool CollisionManager::didCollide(Rect rect1, Rect rect2) {
     return false;
 }
 
-// Check if a rectangle and a circle collide
+/*
 bool CollisionManager::didCollide(Rect rect, Circle Cir) {
-    Vector2 direction = Normalize(Vector2{Cir.center.x - rect.x, Cir.center.y - rect.y});
+    Vector2 direction = GJKinitialDirection(rect, Cir);
     Vector2 simplex1 = simplexSupportFunction(rect, Cir, direction);
     direction = Normalize(simplex1 * -1);
     Vector2 simplex2 = simplexSupportFunction(rect, Cir, direction);
@@ -230,7 +248,7 @@ bool CollisionManager::didCollide(Circle Cir1, Circle Cir2) {
     else
         return false;
 }
-
+*/
 // For closest edge to origin
 Vector2 CollisionManager::closestEdgetoOrigin() {
     int n = polytope.size();
