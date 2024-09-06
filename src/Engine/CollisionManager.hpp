@@ -1,9 +1,11 @@
 #pragma once
 #include "Components/Collider.hpp"
 #include "Vector2Ext.hpp"
+#include "GameEngine.hpp"
 #include <thread>
 #include <mutex>
 #include <future>
+#include <unordered_set>
 #include <set>
 
 class AABB;
@@ -11,6 +13,8 @@ class BVHNode;
 class Collider;
 class CollisionShape;
 class GameObject;
+class GameEngine;
+
 class CollisionManager {
 public:
     static CollisionManager &getInstance() {
@@ -50,7 +54,7 @@ public:
     Vector2 simplexSupportFunction(const Circle &circle, const Rect &rect, const Vector2 &direction) { return simplexSupportFunction(rect, circle, direction); }
 
     void update(float deltaTime);
-    void renderUpdate(float renderDeltaTime){};
+    void renderUpdate(float renderDeltaTime);
 
     void addCollider(Collider *collider);
     void resetColliders();
@@ -66,10 +70,12 @@ public:
     void resetCollisions();
 
 
+    std::vector<AABB*> boundingBoxs;
 private:
     CollisionManager() = default;
     CollisionManager(const CollisionManager &) = delete;
     CollisionManager &operator=(const CollisionManager &) = delete;
+
 
     std::unique_ptr<BVHNode> bvhRoot; // Root of the BVH tree
     std::vector<Collider*> colliders; // List of colliders
@@ -103,6 +109,7 @@ public:
     AABB merge(const AABB &other);
 };
 
+
 // BVH Node structure definition
 class BVHNode {
 public:
@@ -116,7 +123,7 @@ public:
     BVHNode(const AABB &box) : boundingBox(box) {}
     BVHNode(const std::vector<std::shared_ptr<CollisionShape>> &colliders) : colliders(colliders) {}
 
-    AABB calculateBoundingBox();
+    AABB& calculateBoundingBox();
 
     void subdivide(int currentDepth, int maxDepth = 10, int minColliders = 1);
 

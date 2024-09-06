@@ -142,6 +142,8 @@ void GameEngine::renderLoop() {
             std::lock_guard<std::mutex> lock(renderMutex);
             root->renderUpdate(elapsed);
 
+            CollisionManager::getInstance().renderUpdate(elapsed);
+
             editor.draw();
 
             lastRenderUpdateTime = elapsed;

@@ -8,6 +8,10 @@
 #include "RigidBody2D.hpp"
 #include "ScriptLoader.hpp"
 
+class Transform2D;
+class SpriteRenderer;
+class Collider;
+class RigidBody2D;
 class ScriptLoader;
 
 // Registering components

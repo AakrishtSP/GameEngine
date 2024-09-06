@@ -35,6 +35,8 @@ public:
     void deserializeScene(const std::string& scenePath);
     void serializeScene(const std::string& scenePath);
 
+    [[nodiscard]] bool getIsPlaying() const { return isPlaying; }
+
     friend class Editor;
 
 private:

@@ -6,6 +6,9 @@
 #include "Transform2D.hpp"
 #include "raylib.h"
 
+class Collider;
+class Transform2D;
+
 
 class RigidBody2D : public Component {
 protected:

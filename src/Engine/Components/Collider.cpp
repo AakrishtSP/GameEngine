@@ -152,9 +152,9 @@ void CollisionShape::setCollider(Collider *collider) {
 
 
 Rectangle CollisionShape::getBoundingBox() {
-    if (!transform) {
+    if (transform == nullptr) {
         getTransform();
-    } if (!transform) {
+    } if (transform == nullptr) {
         std::cerr << "transform not found" << std::endl;
         return {0, 0, 0, 0};
     }
