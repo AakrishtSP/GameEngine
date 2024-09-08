@@ -179,7 +179,7 @@ void CollisionManager::addPossibleCollision(std::vector<std::shared_ptr<Collisio
 
 void CollisionManager::addActualCollision(const std::shared_ptr<CollisionShape> &shape1, const std::shared_ptr<CollisionShape> &shape2){
     actualCollisions.push_back(std::vector<std::shared_ptr<CollisionShape>>({shape1, shape2}));
-    actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({shape1->getGameObject(), shape2->getGameObject()}));
+  //  actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({shape1->getGameObject(), shape2->getGameObject()}));
     
 }
 
