@@ -179,6 +179,8 @@ void CollisionManager::addPossibleCollision(std::vector<std::shared_ptr<Collisio
 
 void CollisionManager::addActualCollision(const std::shared_ptr<CollisionShape> &shape1, const std::shared_ptr<CollisionShape> &shape2){
     actualCollisions.push_back(std::vector<std::shared_ptr<CollisionShape>>({shape1, shape2}));
+    actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({shape1->getGameObject(), shape2->getGameObject()}));
+    
 }
 
 void CollisionManager::resetCollisions() {
@@ -302,8 +304,8 @@ Vector2 CollisionManager::closestEdgetoOrigin() {
 // For penetration vector of two rectangles
 template<typename T1, typename T2>
 Vector2 CollisionManager::penetrationVector(T1 shp1, T2 shp2) {
-    if (!didCollide(shp1, shp2))
-        return Vector2{0, 0};
+//    if (!didCollide(shp1, shp2))
+//         return Vector2{0, 0};
     Vector2 closestEdge, newPolytope;
     while (true) {
         closestEdge = closestEdgetoOrigin();
