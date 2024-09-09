@@ -47,4 +47,6 @@
 !Data/
 !Data/**
 
+Data/Outdata.json
+
 assets/Build
