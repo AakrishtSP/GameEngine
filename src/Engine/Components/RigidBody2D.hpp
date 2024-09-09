@@ -22,6 +22,9 @@ protected:
     float affectedByGravity;
     Vector2 gravity;
     Vector2 totalForce;
+    Vector2 previousPosition;
+    Vector2 position;
+
 
 public:
     RigidBody2D();
