@@ -6,13 +6,11 @@ GameEngine &GameEngine::getInstance() {
 }
 
 GameEngine::GameEngine() :
-    targetPhysicsUpdateInterval(1.0f / 60.0f), targetRenderUpdateInterval(1.0f / 60.0f), targetLogicUpdateInterval(1.0f / 60.0f),
-    worldGravity({0.0f, 9.8f}), isPlaying(false) {
+    targetPhysicsUpdateInterval(1.0f / 60.0f), targetRenderUpdateInterval(1.0f / 60.0f),
+    targetLogicUpdateInterval(1.0f / 60.0f), worldGravity({0.0f, 9.8f}), isPlaying(false) {
     lastRenderThreadUpdateTime = std::chrono::high_resolution_clock::now();
     lastPhysicsThreadUpdateTime = std::chrono::high_resolution_clock::now();
     lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
-
-    registerComponents();
 }
 
 GameEngine::~GameEngine() {
@@ -28,6 +26,7 @@ GameEngine::~GameEngine() {
 void GameEngine::init() {
     constexpr int screenWidth = 1280;
     constexpr int screenHeight = 720;
+    registerComponents();
 
     worldGravity = {0.0f, -9.8f};
 
@@ -44,6 +43,7 @@ void GameEngine::init() {
     std::cout << "Current Working Directory: " << currentPath << std::endl;
 
     Editor::getInstance().init();
+    CollisionManager::getInstance();
 
 
     SetTargetFPS(60); // Set the target frames-per-second
@@ -91,6 +91,9 @@ void GameEngine::logicLoop() {
         } else {
             lastLogicThreadUpdateTime = std::chrono::high_resolution_clock::now();
         }
+        if (WindowShouldClose()) {
+            isPlaying = false;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }
 }
@@ -112,6 +115,9 @@ void GameEngine::physicsLoop() {
 
         } else {
             lastPhysicsThreadUpdateTime = std::chrono::high_resolution_clock::now();
+        }
+        if (WindowShouldClose()) {
+            isPlaying = false;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }
@@ -136,11 +142,16 @@ void GameEngine::renderLoop() {
             std::lock_guard<std::mutex> lock(renderMutex);
             root->renderUpdate(elapsed);
 
+            CollisionManager::getInstance().renderUpdate(elapsed);
+
             editor.draw();
 
             lastRenderUpdateTime = elapsed;
             lastRenderThreadUpdateTime = now;
             EndDrawing();
+        }
+        if (WindowShouldClose()) {
+            isPlaying = false;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1)); // Sleep to avoid busy-waiting
     }

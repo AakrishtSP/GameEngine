@@ -43,27 +43,23 @@ void RigidBody2D::update(float deltaTime) {}
 
 void RigidBody2D::physicsUpdate(float fixedDeltaTime) {
     if (isMoveable) {
-
         // Get Gravity
         gravity = GameEngine::getInstance().getWorldGravity() * affectedByGravity;
-
         // Calculate total force
         totalForce = force + gravity * mass;
 
         // Apply forces
-        acceleration = totalForce / mass;
-        velocity = velocity + acceleration * fixedDeltaTime;
+        position = transform->getPosition();
+        position = 2 * position - previousPosition + totalForce / mass * fixedDeltaTime * fixedDeltaTime;
     }
 
     // Update position (assuming you have a way to update position)
     if (!transform) {
         getTransform();
     } else {
-        Vector2 position = transform->getPosition();
         position = position + velocity * fixedDeltaTime;
         transform->setPosition(position);
     }
-
     // Clear force
     force = {0, 0};
     totalForce = {0, 0};

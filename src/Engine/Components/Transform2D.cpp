@@ -6,7 +6,21 @@
 Transform2D::Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(1), worldPosition(), worldRotation(0) {
     name = "Transform2D";
     editorEditMode.resize(4, 0);
-};
+}
+Rect Transform2D::ToGameRect(const Rect &rect) { 
+    
+    // Get the half of the screen width and height
+    float halfScreenWidth = GetScreenWidth() / 2.0f;
+    float halfScreenHeight = GetScreenHeight() / 2.0f;
+
+    // Calculate the game position with flipped y axis
+    float gamePosX = halfScreenWidth + rect.x;
+    float gamePosY = halfScreenHeight - rect.y;
+    float gameWidth = rect.width;
+    float gameHeight = rect.height;
+
+    return Rect{gamePosX, gamePosY, gameWidth, gameHeight};
+}
 
 
 nlohmann::json Transform2D::serialize() {

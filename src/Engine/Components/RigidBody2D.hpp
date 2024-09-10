@@ -6,6 +6,9 @@
 #include "Transform2D.hpp"
 #include "raylib.h"
 
+class Collider;
+class Transform2D;
+
 
 class RigidBody2D : public Component {
 protected:
@@ -19,6 +22,9 @@ protected:
     float affectedByGravity;
     Vector2 gravity;
     Vector2 totalForce;
+    Vector2 previousPosition;
+    Vector2 position;
+
 
 public:
     RigidBody2D();

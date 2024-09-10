@@ -1,5 +1,4 @@
-### C++ template
-*
+# C++ template
 
 # Prerequisites
 *.d
@@ -34,17 +33,27 @@
 *.out
 *.app
 
+# IDE directories
 .idea/
 
+# Ignore everything in .github except workflows
 !.github/
 !.github/workflows/
 !.github/workflows/**
+
+# Track source files and CMake configuration
 !src/
 !src/**
 !CMakeLists.txt
+
+# Track assets and data directories
 !assets/
 !assets/**
 !Data/
 !Data/**
 
+# Exclude specific file
+Data/Outdata.json
+
+# Exclude a build directory within assets
 assets/Build
