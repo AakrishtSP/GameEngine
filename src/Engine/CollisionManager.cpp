@@ -76,26 +76,34 @@ Vector2 CollisionManager::supportFunction(const Circle &circle, const Vector2 &d
     return circle.center + dir * circle.radius;
 }
 
-// Simplex support function for two rectangles
-Vector2 CollisionManager::simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction) {
-    Vector2 support1 = supportFunction(rect1, direction);
-    Vector2 support2 = supportFunction(rect2, direction * -1);
-    return support1 - support2;
-}
-// Simplex support function a rectangle and a circle
-Vector2 CollisionManager::simplexSupportFunction(const Rect &rect, const Circle &circle, const Vector2 &direction) {
-    Vector2 support1 = supportFunction(rect, direction);
-    Vector2 support2 = supportFunction(circle, direction * -1);
+//Simplex support fuction for two shapes
+template<typename T1, typename T2>
+Vector2 CollisionManager::simplexSupportFunction(const T1 &shape1, const T2 &shape2, const Vector2 &direction){
+    Vector2 support1 = supportFunction(shape1, direction);
+    Vector2 support2 = supportFunction(shape2, direction * -1);
     return support1 - support2;
 }
 
-// Simplex support function for two circles
-Vector2 CollisionManager::simplexSupportFunction(const Circle &circle1, const Circle &circle2,
-                                                 const Vector2 &direction) {
-    Vector2 support1 = supportFunction(circle1, direction);
-    Vector2 support2 = supportFunction(circle2, direction * -1);
-    return support1 - support2;
-}
+// // Simplex support function for two rectangles
+// Vector2 CollisionManager::simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction) {
+//     Vector2 support1 = supportFunction(rect1, direction);
+//     Vector2 support2 = supportFunction(rect2, direction * -1);
+//     return support1 - support2;
+// }
+// // Simplex support function a rectangle and a circle
+// Vector2 CollisionManager::simplexSupportFunction(const Rect &rect, const Circle &circle, const Vector2 &direction) {
+//     Vector2 support1 = supportFunction(rect, direction);
+//     Vector2 support2 = supportFunction(circle, direction * -1);
+//     return support1 - support2;
+// }
+
+// // Simplex support function for two circles
+// Vector2 CollisionManager::simplexSupportFunction(const Circle &circle1, const Circle &circle2,
+//                                                  const Vector2 &direction) {
+//     Vector2 support1 = supportFunction(circle1, direction);
+//     Vector2 support2 = supportFunction(circle2, direction * -1);
+//     return support1 - support2;
+// }
 
 void CollisionManager::update(float deltaTime) {
     checkBroadCollisions();
@@ -179,7 +187,7 @@ void CollisionManager::addPossibleCollision(std::vector<std::shared_ptr<Collisio
 
 void CollisionManager::addActualCollision(const std::shared_ptr<CollisionShape> &shape1, const std::shared_ptr<CollisionShape> &shape2){
     actualCollisions.push_back(std::vector<std::shared_ptr<CollisionShape>>({shape1, shape2}));
-  //  actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({shape1->getGameObject(), shape2->getGameObject()}));
+    // actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({shape1->getGameObject(), shape2->getGameObject()}));
     
 }
 
