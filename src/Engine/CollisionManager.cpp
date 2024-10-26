@@ -152,15 +152,35 @@ void CollisionManager::checkNarrowCollisions() {
                 {
                     case 11:
                         ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());
+                        if (ifColide){
+                            Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());
+                            potentialCollisions[i][j]->moveCircle(moveVector);
+                            potentialCollisions[i][k]->moveCircle(moveVector * -1);
+                        } 
                         break;
                     case 12:
                         ifColide = ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());
+                        if (ifColide){
+                            Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());
+                            potentialCollisions[i][j]->moveCircle(moveVector);
+                            potentialCollisions[i][k]->moveRectangle(moveVector * -1);
+                        }
                         break;
                     case 21:
                         ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());
+                        if (ifColide){
+                            Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());
+                            potentialCollisions[i][j]->moveRectangle(moveVector);
+                            potentialCollisions[i][k]->moveCircle(moveVector * -1);
+                        }
                         break;
                     case 22:
                         ifColide = ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());
+                        if (ifColide){
+                            Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());
+                            potentialCollisions[i][j]->moveRectangle(moveVector);
+                            potentialCollisions[i][k]->moveRectangle(moveVector * -1);
+                        }
                         break;
                     default:
                         break;
