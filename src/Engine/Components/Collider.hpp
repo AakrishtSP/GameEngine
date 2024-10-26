@@ -68,11 +68,11 @@ public:
     void setRotation(float rotation) { this->rotation = rotation; }
     void setCircle(const Circle& circle) { this->circle = Circle{circle.center,circle.radius}; isCircle = true; }
     void setCircle(const Vector2& center, float radius) { circle = Circle{center, radius}; isCircle = true; }
-    void moveCircle(const Vector2& distance) { this->circle.center = this->circle.center + distance; }
+    // void moveCircle(const Vector2& distance) { this->circle.center = this->circle.center + distance; }
 
     void setRectangle(const Rectangle& rectangle, float rotation=0.0f) { this->rectangle = rectangle; this->rotation = rotation; isCircle = false; }
     void setRectangle(float x, float y, float width, float height, float rotation=0.0f) { rectangle = Rectangle{x,y,width,height}; this->rotation = rotation; isCircle = false; }
-    void moveRectangle(const Vector2& distance) { this->rectangle.x = this->rectangle.x + distance.x; this->rectangle.y = this->rectangle.y + distance.y; }
+    // void moveRectangle(const Vector2& distance) { this->rectangle.x = this->rectangle.x + distance.x; this->rectangle.y = this->rectangle.y + distance.y; }
 
     Circle getCircle() const;
     Rect getRectangle() const;
