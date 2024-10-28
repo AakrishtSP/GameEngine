@@ -15,7 +15,7 @@ bool CollisionManager::pointPassedOrigin(Vector2 refrenceVec1, Vector2 refrenceV
         return false;
     else
         return true;
-
+}
 // Gives perpendicular vector pointing towards orign
 Vector2 CollisionManager::directionToOrigin(Vector2 vec1, Vector2 vec2) {
     Vector2 lineVec = vec2 - vec1;
