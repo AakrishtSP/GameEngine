@@ -15,7 +15,6 @@ bool CollisionManager::pointPassedOrigin(Vector2 refrenceVec1, Vector2 refrenceV
         return false;
     else
         return true;
-}
 
 // Gives perpendicular vector pointing towards orign
 Vector2 CollisionManager::directionToOrigin(Vector2 vec1, Vector2 vec2) {
@@ -178,6 +177,7 @@ void CollisionManager::checkNarrowCollisions() {
     int potentialCollisionSize = potentialCollisions.size();
     int n;
     bool ifColide;
+    Vector2 moveVector;
     for(int i = 0; i < potentialCollisionSize; i++){
         n = potentialCollisions[i].size();
         for (int j = 0; j < n; j++){
@@ -186,41 +186,32 @@ void CollisionManager::checkNarrowCollisions() {
                 {
                     case 11:
                         ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());
-                        // if (ifColide){
-                        //     Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());
-                        //     potentialCollisions[i][j]->moveCircle(moveVector);
-                        //     potentialCollisions[i][k]->moveCircle(moveVector * -1);
-                        // } 
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());                        
                         break;
                     case 12:
                         ifColide = ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());
-                        // if (ifColide){
-                        //     Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());
-                        //     potentialCollisions[i][j]->moveCircle(moveVector);
-                        //     potentialCollisions[i][k]->moveRectangle(moveVector * -1);
-                        // }
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());    
                         break;
                     case 21:
                         ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());
-                        // if (ifColide){
-                        //     Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());
-                        //     potentialCollisions[i][j]->moveRectangle(moveVector);
-                        //     potentialCollisions[i][k]->moveCircle(moveVector * -1);
-                        // }
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());    
                         break;
                     case 22:
                         ifColide = ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());
-                        // if (ifColide){
-                        //     Vector2 moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());
-                        //     potentialCollisions[i][j]->moveRectangle(moveVector);
-                        //     potentialCollisions[i][k]->moveRectangle(moveVector * -1);
-                        // }
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());    
                         break;
                     default:
                         break;
                 }
-                if (ifColide)
+                if (ifColide){
+                    potentialCollisionsGO[i][j]->getComponent<Transform2D>()->translate(moveVector);
+                    potentialCollisionsGO[i][k]->getComponent<Transform2D>()->translate(moveVector * -1);   
                     addActualCollision(potentialCollisions[i][j],potentialCollisions[i][k]);
+                }
             }
         }
     }
