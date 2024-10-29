@@ -16,7 +16,6 @@ bool CollisionManager::pointPassedOrigin(Vector2 refrenceVec1, Vector2 refrenceV
     else
         return true;
 }
-
 // Gives perpendicular vector pointing towards orign
 Vector2 CollisionManager::directionToOrigin(Vector2 vec1, Vector2 vec2) {
     Vector2 lineVec = vec2 - vec1;
@@ -76,26 +75,34 @@ Vector2 CollisionManager::supportFunction(const Circle &circle, const Vector2 &d
     return circle.center + dir * circle.radius;
 }
 
-// Simplex support function for two rectangles
-Vector2 CollisionManager::simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction) {
-    Vector2 support1 = supportFunction(rect1, direction);
-    Vector2 support2 = supportFunction(rect2, direction * -1);
-    return support1 - support2;
-}
-// Simplex support function a rectangle and a circle
-Vector2 CollisionManager::simplexSupportFunction(const Rect &rect, const Circle &circle, const Vector2 &direction) {
-    Vector2 support1 = supportFunction(rect, direction);
-    Vector2 support2 = supportFunction(circle, direction * -1);
+//Simplex support fuction for two shapes
+template<typename T1, typename T2>
+Vector2 CollisionManager::simplexSupportFunction(const T1 &shape1, const T2 &shape2, const Vector2 &direction){
+    Vector2 support1 = supportFunction(shape1, direction);
+    Vector2 support2 = supportFunction(shape2, direction * -1);
     return support1 - support2;
 }
 
-// Simplex support function for two circles
-Vector2 CollisionManager::simplexSupportFunction(const Circle &circle1, const Circle &circle2,
-                                                 const Vector2 &direction) {
-    Vector2 support1 = supportFunction(circle1, direction);
-    Vector2 support2 = supportFunction(circle2, direction * -1);
-    return support1 - support2;
-}
+// // Simplex support function for two rectangles
+// Vector2 CollisionManager::simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction) {
+//     Vector2 support1 = supportFunction(rect1, direction);
+//     Vector2 support2 = supportFunction(rect2, direction * -1);
+//     return support1 - support2;
+// }
+// // Simplex support function a rectangle and a circle
+// Vector2 CollisionManager::simplexSupportFunction(const Rect &rect, const Circle &circle, const Vector2 &direction) {
+//     Vector2 support1 = supportFunction(rect, direction);
+//     Vector2 support2 = supportFunction(circle, direction * -1);
+//     return support1 - support2;
+// }
+
+// // Simplex support function for two circles
+// Vector2 CollisionManager::simplexSupportFunction(const Circle &circle1, const Circle &circle2,
+//                                                  const Vector2 &direction) {
+//     Vector2 support1 = supportFunction(circle1, direction);
+//     Vector2 support2 = supportFunction(circle2, direction * -1);
+//     return support1 - support2;
+// }
 
 void CollisionManager::update(float deltaTime) {
     checkBroadCollisions();
@@ -170,6 +177,7 @@ void CollisionManager::checkNarrowCollisions() {
     int potentialCollisionSize = potentialCollisions.size();
     int n;
     bool ifColide;
+    Vector2 moveVector;
     for(int i = 0; i < potentialCollisionSize; i++){
         n = potentialCollisions[i].size();
         for (int j = 0; j < n; j++){
@@ -178,21 +186,32 @@ void CollisionManager::checkNarrowCollisions() {
                 {
                     case 11:
                         ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());                        
                         break;
                     case 12:
                         ifColide = ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());    
                         break;
                     case 21:
                         ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());    
                         break;
                     case 22:
                         ifColide = ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());
+                        if (ifColide)
+                            moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());    
                         break;
                     default:
                         break;
                 }
-                if (ifColide)
+                if (ifColide){
+                    potentialCollisionsGO[i][j]->getComponent<Transform2D>()->translate(moveVector);
+                    potentialCollisionsGO[i][k]->getComponent<Transform2D>()->translate(moveVector * -1);   
                     addActualCollision(potentialCollisions[i][j],potentialCollisions[i][k]);
+                }
             }
         }
     }
@@ -224,8 +243,7 @@ void CollisionManager::addPossibleCollision(std::vector<std::shared_ptr<Collisio
 
 void CollisionManager::addActualCollision(const std::shared_ptr<CollisionShape> &shape1, const std::shared_ptr<CollisionShape> &shape2){
     actualCollisions.push_back(std::vector<std::shared_ptr<CollisionShape>>({shape1, shape2}));
-  //  actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({shape1->getGameObject(), shape2->getGameObject()}));
-    
+    actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({std::shared_ptr<GameObject>(shape1->getGameObject()), std::shared_ptr<GameObject>(shape2->getGameObject())}));
 }
 
 void CollisionManager::resetCollisions() {
@@ -365,7 +383,8 @@ Vector2 CollisionManager::penetrationVector(T1 shp1, T2 shp2) {
         newPolytope = simplexSupportFunction(shp1, shp2,
                                              directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)));
         if (newPolytope == polytope.at(closestEdge.x) || newPolytope == polytope.at(closestEdge.y)) {
-            return directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y));
+            return directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)) 
+                    * distanceToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y));
         } else
             polytope.insert(polytope.begin() + closestEdge.y, newPolytope);
     }
