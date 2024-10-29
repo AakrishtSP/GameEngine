@@ -51,6 +51,8 @@ void RigidBody2D::physicsUpdate(float fixedDeltaTime) {
         // Apply forces
         position = transform->getPosition();
         position = 2 * position - previousPosition + totalForce / mass * fixedDeltaTime * fixedDeltaTime;
+
+        previousPosition = transform->getPosition();
     }
 
     // Update position (assuming you have a way to update position)
