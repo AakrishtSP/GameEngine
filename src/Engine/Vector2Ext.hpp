@@ -124,6 +124,6 @@ inline float truncateToOneDecimals(float value) {
 }
 
 //To check if two Vector are aproximately equal
-inline bool aproxEqual(Vector2 vec1, Vector2 vec2){
+inline bool isApproxEqual(Vector2 vec1, Vector2 vec2){
     return (truncateToOneDecimals(vec1.x) == truncateToOneDecimals(vec2.x) && truncateToOneDecimals(vec1.y) == truncateToOneDecimals(vec2.y));
 }
