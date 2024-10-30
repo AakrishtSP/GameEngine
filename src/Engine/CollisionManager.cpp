@@ -206,6 +206,7 @@ void CollisionManager::checkNarrowCollisions() {
                     default:
                         break;
                 }
+                std::cout << "Collision: " << ifColide << std::endl;
                 if (ifColide){
                     potentialCollisionsGO[i][j]->getComponent<Transform2D>()->translate(moveVector);
                     potentialCollisionsGO[i][k]->getComponent<Transform2D>()->translate(moveVector * -1);   
@@ -331,7 +332,7 @@ bool CollisionManager::didCollide(Tm1 shape1, Tm2 shape2) {
             simplex1 = simplex3;
         direction = directionToOrigin(simplex1, simplex2);
         newSimplex = simplexSupportFunction(shape1, shape2, direction);
-        if (newSimplex == simplex1 || newSimplex == simplex2)
+        if (isApproxEqual(newSimplex,simplex1)|| isApproxEqual(newSimplex,simplex2))
             return false;
         else
             simplex3 = newSimplex;
@@ -409,7 +410,7 @@ Vector2 CollisionManager::penetrationVector(T1 shp1, T2 shp2) {
         closestEdge = closestEdgetoOrigin();
         newPolytope = simplexSupportFunction(shp1, shp2,
                                              directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)));
-        if (newPolytope == polytope.at(closestEdge.x) || newPolytope == polytope.at(closestEdge.y)) {
+        if (isApproxEqual(newPolytope, polytope.at(closestEdge.x))|| isApproxEqual(newPolytope, polytope.at(closestEdge.y))) {
             return directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)) 
                     * distanceToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y));
         } else
