@@ -156,7 +156,6 @@ void CollisionManager::addCollider(Collider *collider) {
     }
 }
 
-
 void CollisionManager::resetColliders() {
     colliders.clear();
     shapes.clear();
@@ -243,21 +242,49 @@ void CollisionManager::addPossibleCollision(std::vector<std::shared_ptr<Collisio
 
 void CollisionManager::addActualCollision(const std::shared_ptr<CollisionShape> &shape1, const std::shared_ptr<CollisionShape> &shape2){
     actualCollisions.push_back(std::vector<std::shared_ptr<CollisionShape>>({shape1, shape2}));
-    actualCollisionsGO.push_back(std::vector<std::shared_ptr<GameObject>>({std::shared_ptr<GameObject>(shape1->getGameObject()), std::shared_ptr<GameObject>(shape2->getGameObject())}));
+    actualCollisionsGO.push_back(std::vector<GameObject*>({shape1->getGameObject(), shape2->getGameObject()}));
 }
 
+// void CollisionManager::resetCollisions() {
+//     for (auto &col: actualCollisions)
+//         col.clear();
+//     actualCollisions.clear();
+//     for (auto &col: actualCollisionsGO)
+//         col.clear();
+//     actualCollisionsGO.clear();
+//     for (auto &col: potentialCollisions)
+//         col.clear();
+//     potentialCollisions.clear();
+//     for (auto &col: potentialCollisionsGO)
+//         col.clear();
+//     potentialCollisionsGO.clear();
+// }
+
 void CollisionManager::resetCollisions() {
-    for (auto &col: actualCollisions)
+    for (auto &col : actualCollisions) {
+        for (auto &ptr : col) {
+            ptr.reset(); // Explicitly reset shared_ptrs
+        }
         col.clear();
+    }
     actualCollisions.clear();
-    for (auto &col: actualCollisionsGO)
+
+    for (auto &col : actualCollisionsGO) {
         col.clear();
+    }
     actualCollisionsGO.clear();
-    for (auto &col: potentialCollisions)
+
+    for (auto &col : potentialCollisions) {
+        for (auto &ptr : col) {
+            ptr.reset();
+        }
         col.clear();
+    }
     potentialCollisions.clear();
-    for (auto &col: potentialCollisionsGO)
+
+    for (auto &col : potentialCollisionsGO) {
         col.clear();
+    }
     potentialCollisionsGO.clear();
 }
 
@@ -430,7 +457,6 @@ AABB AABB::merge(const AABB &other) {
     return *this;
 }
 
-
 AABB &BVHNode::calculateBoundingBox() {
     if (!colliders.empty())
         boundingBox = colliders.front()->getBoundingBox();
@@ -439,7 +465,6 @@ AABB &BVHNode::calculateBoundingBox() {
     }
     return boundingBox;
 }
-
 
 // void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
 //     CollisionManager &CollisionManager = CollisionManager::getInstance();
@@ -530,7 +555,6 @@ AABB &BVHNode::calculateBoundingBox() {
 //     }
 // }
 
-
 void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
     CollisionManager &CollisionManager = CollisionManager::getInstance();
     
@@ -555,7 +579,6 @@ void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
 
     // Determine whether to split vertically or horizontally
     bool splitVertically = (boundingBox.max.x - boundingBox.min.x) >= (boundingBox.max.y - boundingBox.min.y);
-
 
     // Compute the mean center position along the split axis
     float meanPosition = 0.0f;
@@ -633,3 +656,4 @@ void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
         CollisionManager.boundingBoxs.push_back(&right->boundingBox);
     }
 }
+

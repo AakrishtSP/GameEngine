@@ -42,7 +42,6 @@ public:
     // Vector2 simplexSupportFunction(const Circle &circle1, const Circle &circle2, const Vector2 &direction);
     // Vector2 simplexSupportFunction(const Circle &circle, const Rect &rect, const Vector2 &direction) { return simplexSupportFunction(rect, circle, direction); }
 
-
     // For EPA
     template<typename T1, typename T2>
     Vector2 penetrationVector(T1 shp1, T2 shp2);
@@ -70,13 +69,11 @@ public:
                             const std::shared_ptr<CollisionShape> &shape2);
     void resetCollisions();
 
-
     std::vector<AABB*> boundingBoxs;
 private:
     CollisionManager() = default;
     CollisionManager(const CollisionManager &) = delete;
     CollisionManager &operator=(const CollisionManager &) = delete;
-
 
     std::unique_ptr<BVHNode> bvhRoot; // Root of the BVH tree
     std::vector<Collider*> colliders; // List of colliders
@@ -87,10 +84,8 @@ private:
             actualCollisions; // List of colliders that are actually colliding
     std::vector<std::vector<GameObject*>>
             potentialCollisionsGO; // List of GameObjects that are potentially colliding
-    std::vector<std::vector<std::shared_ptr<GameObject>>>
+    std::vector<std::vector<GameObject*>>
             actualCollisionsGO; // List of GameObjects that are actually colliding
-
-
 
     std::vector<Vector2> polytope;
 };
@@ -109,7 +104,6 @@ public:
     bool intersects(const AABB &other) const;
     AABB merge(const AABB &other);
 };
-
 
 // BVH Node structure definition
 class BVHNode {
@@ -130,3 +124,4 @@ public:
 
     ~BVHNode()= default;
 };
+
