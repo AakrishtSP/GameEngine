@@ -7,8 +7,8 @@ Transform2D::Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale
     name = "Transform2D";
     editorEditMode.resize(4, 0);
 }
-Rect Transform2D::ToGameRect(const Rect &rect) { 
-    
+Rect Transform2D::ToGameRect(const Rect &rect) {
+
     // Get the half of the screen width and height
     float halfScreenWidth = GetScreenWidth() / 2.0f;
     float halfScreenHeight = GetScreenHeight() / 2.0f;
@@ -49,6 +49,7 @@ inline void Transform2D::calculateWorldPosition() {
         std::cerr << "owner not found" << std::endl;
         return;
     }
+    std::cout << owner->getName() << " : " << position.x << ", " << position.y << std::endl;
     if (const auto parentObject = owner->getParent(); parentObject == nullptr) {
         worldPosition = position;
         worldRotation = rotation;

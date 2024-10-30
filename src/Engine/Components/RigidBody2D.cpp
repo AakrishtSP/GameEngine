@@ -59,8 +59,8 @@ void RigidBody2D::physicsUpdate(float fixedDeltaTime) {
     if (!transform) {
         getTransform();
     } else {
-        position = position + velocity * fixedDeltaTime;
-        transform->setPosition(position);
+        Vector2 translation = velocity * fixedDeltaTime;
+        transform->translate(translation);
     }
     // Clear force
     force = {0, 0};
