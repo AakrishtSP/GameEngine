@@ -5,6 +5,8 @@
 // class Transform2D;
 class ExampleScript : public ScriptInterface {
 public:
+    float speed = 10.0f;
+    Vector2 velocity = {0, 0};
     void setOwner(GameObject* owner) override {
         this->owner = owner;
     }
@@ -18,7 +20,6 @@ public:
 
     void onUpdate(float deltaTime) override {
 
-
         // std::cout << "Script update: " << deltaTime << std::endl;
     }
     void onPhysicsUpdate(float fixedDeltaTime) override {
@@ -30,21 +31,28 @@ public:
         }
         float multiplier = 20.0f;
         if (IsKeyDown(KEY_W)) {
-            rigidBody->setVelocityY(multiplier);
+            velocity.y += multiplier;
             // rigidBody->addForce({0, multiplier});
         }
         if (IsKeyDown(KEY_S)) {
-            rigidBody->setVelocityY( -multiplier);
+            velocity.y -= multiplier;
             // rigidBody->addForce({0, -multiplier});
         }
         if (IsKeyDown(KEY_A)) {
-            rigidBody->setVelocityX(-multiplier);
+            velocity.x -= multiplier;
             // rigidBody->addForce({-multiplier, 0});
         }
         if (IsKeyDown(KEY_D)) {
-            rigidBody->setVelocityX(multiplier);
+            velocity.x += multiplier;
             // rigidBody->addForce({multiplier, 0});
         }
+        float magnitude = Magnitude(velocity);
+        if (magnitude > 0.5 || magnitude < -0.5) {
+            velocity = Normalize(velocity)*multiplier;
+        } else {
+            velocity = {0, 0};
+        }
+        rigidBody->setVelocity(velocity);
         // std::cout << "Script physics update: " << fixedDeltaTime << std::endl;
     }
 
@@ -61,3 +69,4 @@ extern "C" ScriptInterface* createScript() {
 extern "C" void destroyScript(ScriptInterface* script) {
     delete script;
 }
+
