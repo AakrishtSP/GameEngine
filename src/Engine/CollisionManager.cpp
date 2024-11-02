@@ -306,13 +306,14 @@ Vector2 CollisionManager::GJKinitialDirection(const Circle &circle1, const Circl
     return Normalize(Vector2{circle2.center.x - circle1.center.x, circle2.center.y - circle1.center.y});
 }
 
+
 // Check if two Shapes collide
 template<typename Tm1, typename Tm2>
 bool CollisionManager::didCollide(Tm1 shape1, Tm2 shape2) {
     polytope.clear();
     Vector2 direction = GJKinitialDirection(shape1, shape2);
     Vector2 simplex1 = simplexSupportFunction(shape1, shape2, direction);
-    direction = Normalize(simplex1 * -1);
+    direction = direction * -1;
     Vector2 simplex2 = simplexSupportFunction(shape1, shape2, direction);
 
     if (!pointPassedOrigin(simplex1, simplex2))
@@ -338,7 +339,7 @@ bool CollisionManager::didCollide(Tm1 shape1, Tm2 shape2) {
             simplex1 = simplex3;
         direction = directionToOrigin(simplex1, simplex2);
         newSimplex = simplexSupportFunction(shape1, shape2, direction);
-        if (newSimplex == simplex1 || newSimplex == simplex2)
+        if (isApproxEqual(newSimplex, simplex1) || isApproxEqual(newSimplex, simplex2))
             return false;
         else
             simplex3 = newSimplex;
@@ -416,7 +417,7 @@ Vector2 CollisionManager::penetrationVector(T1 shp1, T2 shp2) {
         closestEdge = closestEdgetoOrigin();
         newPolytope = simplexSupportFunction(shp1, shp2,
                                              directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)));
-        if (newPolytope == polytope.at(closestEdge.x) || newPolytope == polytope.at(closestEdge.y)) {
+        if (isApproxEqual(newPolytope, polytope.at(closestEdge.x)) || isApproxEqual(newPolytope, polytope.at(closestEdge.y))) {
             return directionToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y)) 
                     * distanceToOrigin(polytope.at(closestEdge.x), polytope.at(closestEdge.y));
         } else
