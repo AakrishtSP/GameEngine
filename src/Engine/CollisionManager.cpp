@@ -214,8 +214,8 @@ void CollisionManager::checkNarrowCollisions() {
                         break;
                 }
                 if (ifColide){
-                    potentialCollisionsGO[i][j]->getComponent<Transform2D>()->translate(moveVector/3 * -1);
-                    potentialCollisionsGO[i][k]->getComponent<Transform2D>()->translate(moveVector/3);   
+                    potentialCollisionsGO[i][j]->getComponent<Transform2D>()->translate(moveVector/250 * -1); //Move the object back
+                    potentialCollisionsGO[i][k]->getComponent<Transform2D>()->translate(moveVector/250);   //Sweet spot for resolution 3
                     addActualCollision(potentialCollisions[i][j],potentialCollisions[i][k]);
                 }
             }
