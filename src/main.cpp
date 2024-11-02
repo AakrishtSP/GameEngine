@@ -53,7 +53,7 @@ int main() {
     child2Sprite->loadImage("../assets/Raylib_logo.png");
     child2Sprite->resizeImage(150, 150);
     child2Sprite->initTexture();
-    child2Transform->setPosition({-100, -100});
+    child2Transform->setPosition({-200, -200});
     child2Sprite->getTransform();
     collider2->addCollisionShape(Rectangle{0, 0, 200, 200});
 

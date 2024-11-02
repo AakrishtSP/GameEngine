@@ -25,11 +25,22 @@ public:
     //For GJK
     template<typename Tm1,typename Tm2>
     bool didCollide(Tm1 shape1, Tm2 shape2);
-    /*bool didCollide(Rect rect1, Rect rect2);
-    bool didCollide(Circle Cir1, Circle Cir2);
-    bool didCollide(Rect rect, Circle Cir);
-    bool didCollide(Circle Cir, Rect rect) { return didCollide(rect, Cir); };*/
-
+    // bool didCollide(Rect rect1, Rect rect2);
+    // bool didCollide(Circle Cir1, Circle Cir2);
+    // bool didCollide(Rect rect, Circle Cir);
+    // bool didCollide(Circle Cir, Rect rect) { return didCollide(rect, Cir); };
+    Vector2 GJKinitialDirection(const Rect &rect1, const Rect &rect2);
+    Vector2 GJKinitialDirection(const Rect &rect, const Circle &circle);
+    Vector2 GJKinitialDirection(const Circle &circle1, const Circle &circle2);
+    Vector2 GJKinitialDirection(const Circle &circle, const Rect &rect){return GJKinitialDirection(rect, circle); }
+    Vector2 supportFunction(const Rect &rect, const Vector2 &direction);
+    Vector2 supportFunction(const Circle &circle, const Vector2 &direction);
+    template<typename T1, typename T2>
+    Vector2 simplexSupportFunction(const T1 &shape1, const T2 &shape2, const Vector2 &direction);
+    // Vector2 simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction);
+    // Vector2 simplexSupportFunction(const Rect &rect, const Circle &circle, const Vector2 &direction);
+    // Vector2 simplexSupportFunction(const Circle &circle1, const Circle &circle2, const Vector2 &direction);
+    // Vector2 simplexSupportFunction(const Circle &circle, const Rect &rect, const Vector2 &direction) { return simplexSupportFunction(rect, circle, direction); }
 
     // For EPA
     template<typename T1, typename T2>
@@ -41,17 +52,6 @@ public:
     bool pointPassedOrigin(Vector2 refrenceVec1, Vector2 refrenceVec2, Vector2 testingVec);
     float distanceToOrigin(Vector2 vec1, Vector2 vec2);
     Vector2 directionToOrigin(Vector2 vec1, Vector2 vec2);
-
-    Vector2 GJKinitialDirection(const Rect &rect1, const Rect &rect2);
-    Vector2 GJKinitialDirection(const Rect &rect, const Circle &circle);
-    Vector2 GJKinitialDirection(const Circle &circle1, const Circle &circle2);
-    Vector2 GJKinitialDirection(const Circle &circle, const Rect &rect){return GJKinitialDirection(rect, circle); }
-    Vector2 supportFunction(const Rect &rect, const Vector2 &direction);
-    Vector2 supportFunction(const Circle &circle, const Vector2 &direction);
-    Vector2 simplexSupportFunction(const Rect &rect1, const Rect &rect2, const Vector2 &direction);
-    Vector2 simplexSupportFunction(const Rect &rect, const Circle &circle, const Vector2 &direction);
-    Vector2 simplexSupportFunction(const Circle &circle1, const Circle &circle2, const Vector2 &direction);
-    Vector2 simplexSupportFunction(const Circle &circle, const Rect &rect, const Vector2 &direction) { return simplexSupportFunction(rect, circle, direction); }
 
     void update(float deltaTime);
     void renderUpdate(float renderDeltaTime);
@@ -69,13 +69,11 @@ public:
                             const std::shared_ptr<CollisionShape> &shape2);
     void resetCollisions();
 
-
     std::vector<AABB*> boundingBoxs;
 private:
     CollisionManager() = default;
     CollisionManager(const CollisionManager &) = delete;
     CollisionManager &operator=(const CollisionManager &) = delete;
-
 
     std::unique_ptr<BVHNode> bvhRoot; // Root of the BVH tree
     std::vector<Collider*> colliders; // List of colliders
@@ -86,10 +84,8 @@ private:
             actualCollisions; // List of colliders that are actually colliding
     std::vector<std::vector<GameObject*>>
             potentialCollisionsGO; // List of GameObjects that are potentially colliding
-    std::vector<std::vector<std::shared_ptr<GameObject>>>
+    std::vector<std::vector<GameObject*>>
             actualCollisionsGO; // List of GameObjects that are actually colliding
-
-
 
     std::vector<Vector2> polytope;
 };
@@ -108,7 +104,6 @@ public:
     bool intersects(const AABB &other) const;
     AABB merge(const AABB &other);
 };
-
 
 // BVH Node structure definition
 class BVHNode {
@@ -129,3 +124,4 @@ public:
 
     ~BVHNode()= default;
 };
+

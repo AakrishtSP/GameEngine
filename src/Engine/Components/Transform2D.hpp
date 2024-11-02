@@ -14,18 +14,18 @@ public:
     void deserialize(const nlohmann::json &json) override;
 
     [[nodiscard]] Vector2 getPosition() const { return position; }
-    void setPosition(const Vector2 &position) { this->position = position; }
+    void setPosition(const Vector2 &position) { this->position = position; calculateWorldPosition(); }
     [[nodiscard]] float getRotation() const { return rotation; }
-    void setRotation(const float rotation) { this->rotation = rotation; }
+    void setRotation(const float rotation) { this->rotation = rotation; calculateWorldPosition(); }
     [[nodiscard]] float getScale() const { return scale; }
-    void setScale(const float &scale) { this->scale = scale; }
+    void setScale(const float &scale) { this->scale = scale; calculateWorldPosition(); }
     
     [[nodiscard]] Vector2 getWorldPosition();
     [[nodiscard]] float getWorldRotation();
     [[nodiscard]] float getWorldScale();
 
-    void translate(const Vector2 &translation) { position = position + translation; }
-    void rotate(const float rotation) { this->rotation += rotation; }
+    void translate(const Vector2 &translation) { position = position + translation; calculateWorldPosition(); }
+    void rotate(const float rotation) { this->rotation += rotation; calculateWorldPosition(); }
 
     void calculateWorldPosition();
 
