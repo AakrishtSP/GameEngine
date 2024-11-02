@@ -118,3 +118,12 @@ inline Vector2 MakeVector(float magnitude, Vector2 direction){
     return Normalize(direction) * magnitude;
 }
 
+//To truncate a float to two decimal places
+inline float truncateToOneDecimals(float value) {
+    return static_cast<int>(value * 10) / 10.0f;
+}
+
+//To check if two Vector are aproximately equal
+inline bool isApproxEqual(Vector2 vec1, Vector2 vec2){
+    return (truncateToOneDecimals(vec1.x) == truncateToOneDecimals(vec2.x) && truncateToOneDecimals(vec1.y) == truncateToOneDecimals(vec2.y));
+}
