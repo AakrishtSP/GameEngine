@@ -55,4 +55,8 @@ private:
     std::shared_ptr<GameObject> selectedGameObject;
 
     std::unordered_map<std::shared_ptr<GameObject>, bool> expandState; // Store expand/collapse state for each GameObject
+    bool isHierarchyVisible = true;   //to make the hierarchy box dissapear
+
+    bool isStatsVisible = true;
+    bool isInspectorVisible = true;
 };

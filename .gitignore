@@ -56,4 +56,5 @@
 Data/Outdata.json
 
 # Exclude a build directory within assets
-assets/Build
+assets
+build

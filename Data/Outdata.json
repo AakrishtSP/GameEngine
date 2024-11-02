@@ -22,7 +22,7 @@
                     "isMoveable": false,
                     "mass": 1.0,
                     "velocity": [
-                        -20.0,
+                        0.0,
                         0.0
                     ]
                 },
@@ -47,8 +47,8 @@
                         {
                             "circle": [
                                 0.0,
-                                0.0,
-                                0.0
+                                4.901755480673468e-37,
+                                3.5843813418964496e-41
                             ],
                             "isCircle": false,
                             "rectangle": [
@@ -65,7 +65,7 @@
                     "componentType": "Transform2D",
                     "isActive": true,
                     "position": [
-                        3.337386131286621,
+                        0.0,
                         0.0
                     ],
                     "rotation": 0.0,
@@ -83,8 +83,8 @@
                         {
                             "circle": [
                                 0.0,
-                                0.0,
-                                0.0
+                                -0.0,
+                                -0.0
                             ],
                             "isCircle": false,
                             "rectangle": [
@@ -101,8 +101,8 @@
                     "componentType": "Transform2D",
                     "isActive": true,
                     "position": [
-                        -100.0,
-                        -100.0
+                        -200.0,
+                        -200.0
                     ],
                     "rotation": 0.0,
                     "scale": 1.0
@@ -150,9 +150,9 @@
             "shapes": [
                 {
                     "circle": [
-                        0.0,
-                        0.0,
-                        0.0
+                        7.006492321624085e-45,
+                        8.407790785948902e-45,
+                        9.80908925027372e-45
                     ],
                     "isCircle": false,
                     "rectangle": [
@@ -165,9 +165,9 @@
                 },
                 {
                     "circle": [
-                        0.0,
-                        0.0,
-                        0.0
+                        -0.0,
+                        -0.0,
+                        -0.0
                     ],
                     "isCircle": false,
                     "rectangle": [
@@ -181,7 +181,7 @@
                 {
                     "circle": [
                         0.0,
-                        0.0,
+                        1.1210387714598537e-43,
                         0.0
                     ],
                     "isCircle": false,
