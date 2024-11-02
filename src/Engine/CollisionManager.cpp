@@ -181,6 +181,8 @@ void CollisionManager::checkNarrowCollisions() {
         n = potentialCollisions[i].size();
         for (int j = 0; j < n; j++){
             for (int k = j+1; k < n; k++){
+                auto shape1 = potentialCollisions[i][j];
+                auto shape2 = potentialCollisions[i][k];
                 int shapes = potentialCollisions[i][j]->whatShape()*10 + potentialCollisions[i][k]->whatShape();
                 switch (shapes)
                 {
@@ -556,105 +558,116 @@ AABB &BVHNode::calculateBoundingBox() {
 //     }
 // }
 
+// void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
+//     CollisionManager &CollisionManager = CollisionManager::getInstance();
+    
+//     // Stop subdivision if max depth is reached or collider count is too small
+//     if ((colliders.size() <= minColliders || currentDepth >= maxDepth) && !colliders.empty()) {
+//         if (colliders.size() < 2)
+//             return;
+//         CollisionManager.addPossibleCollision(colliders);
+//         calculateBoundingBox();
+//         CollisionManager.boundingBoxs.push_back(&boundingBox);
+//         return;
+//     }
+
+//     // Calculate the bounding box of the current node
+//     calculateBoundingBox();
+
+//     // Store the bounding box in the collision manager for debugging or future use
+//     CollisionManager.boundingBoxs.push_back(&boundingBox);
+//     std::cout << "Size of boundingBoxs: " << CollisionManager.boundingBoxs.size() << std::endl;
+//     std::cout << "Bounding Box: " << boundingBox.min.x << " " << boundingBox.min.y << " " << boundingBox.max.x << " "
+//               << boundingBox.max.y << std::endl;
+
+//     // Determine whether to split vertically or horizontally
+//     bool splitVertically = (boundingBox.max.x - boundingBox.min.x) >= (boundingBox.max.y - boundingBox.min.y);
+
+//     // Compute the mean center position along the split axis
+//     float meanPosition = 0.0f;
+//     for (const auto &collider: colliders) {
+//         const AABB &box = collider->getBoundingBox();
+//         float center = splitVertically ? (box.min.x + box.max.x) / 2.0f : (box.min.y + box.max.y) / 2.0f;
+//         meanPosition += center;
+//     }
+//     meanPosition /= colliders.size();
+//     // // Calculate the mean position along the split axis
+//     // float meanPosition = (splitVertically) ? (boundingBox.max.x + boundingBox.min.x) / 2.0f 
+//     //                                        : (boundingBox.max.y + boundingBox.min.y) / 2.0f;
+
+//     // Create two child AABBs for the left and right nodes based on the mean position
+//     AABB leftBox = boundingBox;
+//     AABB rightBox = boundingBox;
+
+//     if (splitVertically) {
+//         leftBox.max.x = meanPosition;
+//         rightBox.min.x = meanPosition;
+//     } else {
+//         leftBox.max.y = meanPosition;
+//         rightBox.min.y = meanPosition;
+//     }
+
+//     // Create left and right child nodes
+//     left = std::make_unique<BVHNode>(leftBox);
+//     right = std::make_unique<BVHNode>(rightBox);
+
+//     // Distribute colliders to left and right nodes based on their centroids
+//     for (const auto &collider: colliders) {
+//         const AABB &colliderBox = collider->getBoundingBox();
+        
+//         // Calculate the centroid of the collider's bounding box
+//         float centroid = (splitVertically) 
+//                             ? (colliderBox.min.x + colliderBox.max.x) / 2.0f 
+//                             : (colliderBox.min.y + colliderBox.max.y) / 2.0f;
+        
+//         // Assign the collider based on its centroid position relative to the split axis
+//         if ((splitVertically && centroid < meanPosition) || (!splitVertically && centroid < meanPosition)) {
+//             left->colliders.push_back(collider);
+//         } else {
+//             right->colliders.push_back(collider);
+//         }
+//     }
+
+//     // Handle the case where all colliders end up in one node, preventing further subdivision
+//     if (left->colliders.size() == colliders.size() || right->colliders.size() == colliders.size()) {
+//         // If all colliders are in one child node, add them to potential collisions
+//         if (colliders.size() < 2)
+//             return;
+//         CollisionManager.addPossibleCollision(colliders);
+//         return;
+//     }
+
+//     // Clear the colliders from the current node after distributing them
+//     colliders.clear();
+
+//     // Recursively subdivide the left and right child nodes if possible
+//     if (!left->colliders.empty() && currentDepth < maxDepth && left->colliders.size() > minColliders) {
+//         left->subdivide(currentDepth + 1, maxDepth, minColliders);
+//     } else if (left->colliders.size() > 1) {
+//         // If the left node can't be subdivided further, add it to potential collisions
+//         CollisionManager.addPossibleCollision(left->colliders);
+//         left->calculateBoundingBox();
+//         CollisionManager.boundingBoxs.push_back(&left->boundingBox);
+//     }
+
+//     if (!right->colliders.empty() && currentDepth < maxDepth && right->colliders.size() > minColliders) {
+//         right->subdivide(currentDepth + 1, maxDepth, minColliders);
+//     } else if (right->colliders.size() > 1) {
+//         // If the right node can't be subdivided further, add it to potential collisions
+//         CollisionManager.addPossibleCollision(right->colliders);
+//         right->calculateBoundingBox();
+//         CollisionManager.boundingBoxs.push_back(&right->boundingBox);
+//     }
+// }
+
 void BVHNode::subdivide(int currentDepth, int maxDepth, int minColliders) {
     CollisionManager &CollisionManager = CollisionManager::getInstance();
-    
-    // Stop subdivision if max depth is reached or collider count is too small
-    if ((colliders.size() <= minColliders || currentDepth >= maxDepth) && !colliders.empty()) {
-        if (colliders.size() < 2)
-            return;
-        CollisionManager.addPossibleCollision(colliders);
-        calculateBoundingBox();
-        CollisionManager.boundingBoxs.push_back(&boundingBox);
-        return;
-    }
 
-    // Calculate the bounding box of the current node
-    calculateBoundingBox();
-
-    // Store the bounding box in the collision manager for debugging or future use
-    CollisionManager.boundingBoxs.push_back(&boundingBox);
-    std::cout << "Size of boundingBoxs: " << CollisionManager.boundingBoxs.size() << std::endl;
-    std::cout << "Bounding Box: " << boundingBox.min.x << " " << boundingBox.min.y << " " << boundingBox.max.x << " "
-              << boundingBox.max.y << std::endl;
-
-    // Determine whether to split vertically or horizontally
-    bool splitVertically = (boundingBox.max.x - boundingBox.min.x) >= (boundingBox.max.y - boundingBox.min.y);
-
-    // Compute the mean center position along the split axis
-    float meanPosition = 0.0f;
-    for (const auto &collider: colliders) {
-        const AABB &box = collider->getBoundingBox();
-        float center = splitVertically ? (box.min.x + box.max.x) / 2.0f : (box.min.y + box.max.y) / 2.0f;
-        meanPosition += center;
-    }
-    meanPosition /= colliders.size();
-    // // Calculate the mean position along the split axis
-    // float meanPosition = (splitVertically) ? (boundingBox.max.x + boundingBox.min.x) / 2.0f 
-    //                                        : (boundingBox.max.y + boundingBox.min.y) / 2.0f;
-
-    // Create two child AABBs for the left and right nodes based on the mean position
-    AABB leftBox = boundingBox;
-    AABB rightBox = boundingBox;
-
-    if (splitVertically) {
-        leftBox.max.x = meanPosition;
-        rightBox.min.x = meanPosition;
-    } else {
-        leftBox.max.y = meanPosition;
-        rightBox.min.y = meanPosition;
-    }
-
-    // Create left and right child nodes
-    left = std::make_unique<BVHNode>(leftBox);
-    right = std::make_unique<BVHNode>(rightBox);
-
-    // Distribute colliders to left and right nodes based on their centroids
-    for (const auto &collider: colliders) {
-        const AABB &colliderBox = collider->getBoundingBox();
-        
-        // Calculate the centroid of the collider's bounding box
-        float centroid = (splitVertically) 
-                            ? (colliderBox.min.x + colliderBox.max.x) / 2.0f 
-                            : (colliderBox.min.y + colliderBox.max.y) / 2.0f;
-        
-        // Assign the collider based on its centroid position relative to the split axis
-        if ((splitVertically && centroid < meanPosition) || (!splitVertically && centroid < meanPosition)) {
-            left->colliders.push_back(collider);
-        } else {
-            right->colliders.push_back(collider);
+    for (int i=0;i<colliders.size();i++){
+        for(int j=i+1;j<colliders.size();j++){
+            std::vector<std::shared_ptr<CollisionShape>> collid = {colliders[i], colliders[j]};
+            CollisionManager.addPossibleCollision(collid);
         }
-    }
-
-    // Handle the case where all colliders end up in one node, preventing further subdivision
-    if (left->colliders.size() == colliders.size() || right->colliders.size() == colliders.size()) {
-        // If all colliders are in one child node, add them to potential collisions
-        if (colliders.size() < 2)
-            return;
-        CollisionManager.addPossibleCollision(colliders);
-        return;
-    }
-
-    // Clear the colliders from the current node after distributing them
-    colliders.clear();
-
-    // Recursively subdivide the left and right child nodes if possible
-    if (!left->colliders.empty() && currentDepth < maxDepth && left->colliders.size() > minColliders) {
-        left->subdivide(currentDepth + 1, maxDepth, minColliders);
-    } else if (left->colliders.size() > 1) {
-        // If the left node can't be subdivided further, add it to potential collisions
-        CollisionManager.addPossibleCollision(left->colliders);
-        left->calculateBoundingBox();
-        CollisionManager.boundingBoxs.push_back(&left->boundingBox);
-    }
-
-    if (!right->colliders.empty() && currentDepth < maxDepth && right->colliders.size() > minColliders) {
-        right->subdivide(currentDepth + 1, maxDepth, minColliders);
-    } else if (right->colliders.size() > 1) {
-        // If the right node can't be subdivided further, add it to potential collisions
-        CollisionManager.addPossibleCollision(right->colliders);
-        right->calculateBoundingBox();
-        CollisionManager.boundingBoxs.push_back(&right->boundingBox);
     }
 }
 
