@@ -1,6 +1,5 @@
 #include "Engine/GameEngine.hpp"
 
-
 int main() {
     GameEngine& engine = GameEngine::getInstance();
     engine.init();
@@ -8,7 +7,6 @@ int main() {
     engine.setPhysicsUpdateInterval(1.0f / 120.0f);
 
     // engine.deserializeScene("../Data/data.json");
-
 
     float screen_width = GetScreenWidth();
     float screen_height = GetScreenHeight();
@@ -24,7 +22,6 @@ int main() {
     rootCollider->addCollisionShape(Rectangle{half_screen_width, 0, 5, screen_height-50});
     rootCollider->addCollisionShape(Rectangle{0, -half_screen_height, screen_width-50, 5});
     rootCollider->addCollisionShape(Rectangle{0, half_screen_height, screen_width-50, 5});
-
 
     auto &child1 = root->addChild("Child1");
     auto &child2 = root->addChild("Child2");
@@ -53,14 +50,13 @@ int main() {
     child2Sprite->loadImage("../assets/Raylib_logo.png");
     child2Sprite->resizeImage(150, 150);
     child2Sprite->initTexture();
-    child2Transform->setPosition({-200, -200});
+    child2Transform->setPosition({-50, -50});
     child2Sprite->getTransform();
     collider2->addCollisionShape(Rectangle{0, 0, 200, 200});
-
-
 
     //run engine
     engine.run();
 
     return 0;
 }
+
