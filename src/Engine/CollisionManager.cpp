@@ -2,7 +2,7 @@
 
 // To check if a point passes origin with respect to a point
 bool CollisionManager::pointPassedOrigin(Vector2 refrenceVec, Vector2 testingVec) {
-    if (DotProduct(refrenceVec, testingVec) < 0)
+    if (DotProduct(refrenceVec, testingVec) > 0)
         return false;
     else
         return true;
@@ -313,7 +313,7 @@ bool CollisionManager::didCollide(Tm1 shape1, Tm2 shape2) {
     polytope.clear();
     Vector2 direction = GJKinitialDirection(shape1, shape2);
     Vector2 simplex1 = simplexSupportFunction(shape1, shape2, direction);
-    direction = direction * -1;
+    direction = Normalize(simplex1 * -1);
     Vector2 simplex2 = simplexSupportFunction(shape1, shape2, direction);
 
     if (!pointPassedOrigin(simplex1, simplex2))
