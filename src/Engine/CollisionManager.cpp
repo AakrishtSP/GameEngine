@@ -180,31 +180,35 @@ void CollisionManager::checkNarrowCollisions() {
     for(int i = 0; i < potentialCollisionSize; i++){
         n = potentialCollisions[i].size();
         for (int j = 0; j < n; j++){
+            Rect rect1 = potentialCollisions[i][j]->getRectangle();
+            Circle circle1 = potentialCollisions[i][j]->getCircle();
             for (int k = j+1; k < n; k++){
+                Rect rect2 = potentialCollisions[i][k]->getRectangle();
+                Circle circle2 = potentialCollisions[i][k]->getCircle();
                 auto shape1 = potentialCollisions[i][j];
                 auto shape2 = potentialCollisions[i][k];
                 int shapes = potentialCollisions[i][j]->whatShape()*10 + potentialCollisions[i][k]->whatShape();
                 switch (shapes)
                 {
                     case 11:
-                        ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());
+                        ifColide = didCollide(circle1, circle2);
                         if (ifColide)
-                            moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getCircle());                        
+                            moveVector = penetrationVector(circle1, circle2);                        
                         break;
                     case 12:
-                        ifColide = didCollide(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());
+                        ifColide = didCollide(circle1, rect2);
                         if (ifColide)
-                            moveVector = penetrationVector(potentialCollisions[i][j]->getCircle(), potentialCollisions[i][k]->getRectangle());    
+                            moveVector = penetrationVector(circle1, rect2);    
                         break;
                     case 21:
-                        ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());
+                        ifColide = didCollide(rect1, circle2);
                         if (ifColide)
-                            moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getCircle());    
+                            moveVector = penetrationVector(rect1, circle2);    
                         break;
                     case 22:
-                        ifColide = didCollide(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());
+                        ifColide = didCollide(rect1, rect2);
                         if (ifColide)
-                            moveVector = penetrationVector(potentialCollisions[i][j]->getRectangle(), potentialCollisions[i][k]->getRectangle());    
+                            moveVector = penetrationVector(rect1, rect2);    
                         break;
                     default:
                         break;
