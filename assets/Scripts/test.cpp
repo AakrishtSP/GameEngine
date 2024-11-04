@@ -10,8 +10,8 @@ public:
     }
 
     void onStart() override {
-        std::cout << "Script started!" << std::endl;
-        std::cout << "Owner name: " << owner->getName() << std::endl;
+        // std::cout << "Script started!" << std::endl;
+        // std::cout << "Owner name: " << owner->getName() << std::endl;
         // transform = owner->getComponent<Transform2D>();
         // rigidBody = owner->getComponent<RigidBody2D>();
     }

@@ -38,7 +38,7 @@ int main() {
     auto rigidBody = child1.addComponent<RigidBody2D>();
     rigidBody->setMoveable(false);
     auto collider = child1.addComponent<Collider>();
-    collider->addCollisionShape(Rectangle{0, 0, 150, 150});
+    collider->addCollisionShape(Rectangle{0, 0, 50, 50});
 
     auto rb = child2.addComponent<RigidBody2D>();
     rb->setMoveable(false);
@@ -47,12 +47,12 @@ int main() {
     auto collider2 = child2.addComponent<Collider>();
 
     script->loadScript("../assets/Build/libtest.so");
-    child2Sprite->loadImage("../assets/Raylib_logo.png");
+    child2Sprite->loadImage("../assets/cpp.png");
     child2Sprite->resizeImage(150, 150);
     child2Sprite->initTexture();
     child2Transform->setPosition({-50, -50});
     child2Sprite->getTransform();
-    collider2->addCollisionShape(Rectangle{0, 0, 200, 200});
+    collider2->addCollisionShape(Rectangle{0, 0, 75, 75});
 
     //run engine
     engine.run();

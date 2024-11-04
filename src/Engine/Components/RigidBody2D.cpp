@@ -2,14 +2,12 @@
 #include "../GameEngine.hpp"
 #include "raygui.h"
 
-
 RigidBody2D::RigidBody2D() :
     velocity({0, 0}), acceleration({0, 0}), force({0, 0}), isMoveable(true), mass(1), affectedByGravity(1),
     gravity({0, 0}) {
     name = "RigidBody2D";
     editorEditMode.resize(7, 0);
 }
-
 
 nlohmann::json RigidBody2D::serialize() {
     nlohmann::json json;
@@ -48,11 +46,14 @@ void RigidBody2D::physicsUpdate(float fixedDeltaTime) {
         // Calculate total force
         totalForce = force + gravity * mass;
 
+        if (!transform) {
+            getTransform();
+        }
         // Apply forces
         position = transform->getPosition();
         position = 2 * position - previousPosition + totalForce / mass * fixedDeltaTime * fixedDeltaTime;
-
-        previousPosition = transform->getPosition();
+        transform->setPosition(position);
+        // previousPosition = position;
     }
 
     // Update position (assuming you have a way to update position)
@@ -65,8 +66,8 @@ void RigidBody2D::physicsUpdate(float fixedDeltaTime) {
     // Clear force
     force = {0, 0};
     totalForce = {0, 0};
+    previousPosition = transform->getPosition();
 }
-
 
 void RigidBody2D::getTransform() {
     if (!owner) {
@@ -89,7 +90,6 @@ void RigidBody2D::getCollider() {
         collider = owner->addComponent<Collider>();
     }
 }
-
 
 Rectangle RigidBody2D::drawInspector(Rectangle &previousRectangle) {
     // Define the width of the group box and padding
@@ -172,7 +172,6 @@ Rectangle RigidBody2D::drawInspector(Rectangle &previousRectangle) {
     force.y = std::stof(forceYBuffer);
     mass = std::stof(massBuffer);
 
-
     GuiLabel(Rectangle{labelX, currentY, labelWidth, 20}, "Moveable");
     GuiCheckBox(Rectangle{textBoxX, currentY, 20, 20}, "", &isMoveable); // isMoveable
     currentY += 30.0f; // Update currentY to next line
@@ -190,9 +189,9 @@ Rectangle RigidBody2D::drawInspector(Rectangle &previousRectangle) {
     Rectangle returnRect = {previousRectangle.x, previousRectangle.y + previousRectangle.height,
                             previousRectangle.width, groupBoxHeight + padding * 5};
 
-
     // Return the bounding rectangle for the entire group box
     return returnRect;
 }
 
 void RigidBody2D::setAffectedByGravity(const float affectedByGravity) { this->affectedByGravity = affectedByGravity; }
+
