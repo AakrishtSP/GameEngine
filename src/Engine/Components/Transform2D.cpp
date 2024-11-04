@@ -2,7 +2,6 @@
 #include "../Component.hpp"
 #include "raygui.h"
 
-
 Transform2D::Transform2D() : position({0, 0}), rotation(0), scale(1), worldScale(1), worldPosition(), worldRotation(0) {
     name = "Transform2D";
     editorEditMode.resize(4, 0);
@@ -21,7 +20,6 @@ Rect Transform2D::ToGameRect(const Rect &rect) {
 
     return Rect{gamePosX, gamePosY, gameWidth, gameHeight};
 }
-
 
 nlohmann::json Transform2D::serialize() {
     nlohmann::json json;
@@ -49,7 +47,7 @@ inline void Transform2D::calculateWorldPosition() {
         std::cerr << "owner not found" << std::endl;
         return;
     }
-    std::cout << owner->getName() << " : " << position.x << ", " << position.y << std::endl;
+    // std::cout << owner->getName() << " : " << position.x << ", " << position.y << std::endl;
     if (const auto parentObject = owner->getParent(); parentObject == nullptr) {
         worldPosition = position;
         worldRotation = rotation;
@@ -77,7 +75,6 @@ Vector2 Transform2D::getGamePosition() const {
     return Vector2{gamePosX, gamePosY};
 }
 
-
 Vector2 Transform2D::getWorldPosition() {
     calculateWorldPosition();
     return worldPosition;
@@ -92,7 +89,6 @@ float Transform2D::getWorldScale() {
     calculateWorldPosition();
     return worldScale;
 }
-
 
 Rectangle Transform2D::drawInspector(Rectangle &previousRectangle) {
     // Define the width of the group box and padding
@@ -146,3 +142,4 @@ Rectangle Transform2D::drawInspector(Rectangle &previousRectangle) {
     // Return the bounding rectangle for the entire group box
     return returnRect;
 }
+

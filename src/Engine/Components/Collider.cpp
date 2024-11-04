@@ -30,19 +30,19 @@ void Collider::deserialize(const nlohmann::json &json) {
 void Collider::update(float deltaTime) {}
 
 void Collider::renderUpdate(float renderDeltaTime) {
-    float halfWidth = GetScreenWidth() / 2;
-    float halfHeight = GetScreenHeight() / 2;
-    for (auto &shape: shapes) {
-        if (shape->isCircle) {
-            Circle c = shape->getCircle();
-            DrawCircleV(Vector2{halfWidth + c.center.x, halfHeight - c.center.y}, c.radius, RED);
-        } else {
-            // Rect r = Transform2D::ToGameRect(shape->getRectangle());
-            Rect r = shape->getRectangle();
-            Rectangle rec = {halfWidth + r.x, halfHeight - r.y, r.width, r.height};
-            DrawRectanglePro(rec, Vector2{r.width / 2, r.height / 2}, r.rotation, RED);
-        }
-    }
+    // float halfWidth = GetScreenWidth() / 2;
+    // float halfHeight = GetScreenHeight() / 2;
+    // for (auto &shape: shapes) {
+    //     if (shape->isCircle) {
+    //         Circle c = shape->getCircle();
+    //         DrawCircleV(Vector2{halfWidth + c.center.x, halfHeight - c.center.y}, c.radius, RED);
+    //     } else {
+    //         // Rect r = Transform2D::ToGameRect(shape->getRectangle());
+    //         Rect r = shape->getRectangle();
+    //         Rectangle rec = {halfWidth + r.x, halfHeight - r.y, r.width, r.height};
+    //         DrawRectanglePro(rec, Vector2{r.width / 2, r.height / 2}, r.rotation, RED);
+    //     }
+    // }
 
     //     if (!isTextureInitialized) {
     //     initTexture();
@@ -74,7 +74,6 @@ std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Circle &circle
     return shapePtr;
 }
 
-
 std::shared_ptr<CollisionShape> Collider::addCollisionShape(const Rectangle &rectangle, float rotation) {
     std::shared_ptr<CollisionShape> shapePtr = std::make_shared<CollisionShape>(rectangle, rotation);
     addCollisionShape(shapePtr);
@@ -89,7 +88,6 @@ std::shared_ptr<CollisionShape> Collider::addCollisionShape(std::shared_ptr<Coll
     CollisionManager::getInstance().addCollider(this);
     return shape;
 }
-
 
 void Collider::removeCollisionShape(const std::shared_ptr<CollisionShape> &shape) {
     shapes.erase(std::remove(shapes.begin(), shapes.end(), shape), shapes.end());
@@ -129,7 +127,6 @@ Rectangle Collider::drawInspector(Rectangle &previousRectangle) {
     return returnRect;
 }
 
-
 CollisionShape::CollisionShape(const Circle &circle) :
     circle(circle), isCircle(true), rotation(0), rectangle({0, 0, 0, 0}) {
     editorEditMode.resize(6, 0);
@@ -149,7 +146,6 @@ void CollisionShape::setCollider(Collider *collider) {
     this->collider = collider;
     owner = collider->getOwner();
 }
-
 
 Rectangle CollisionShape::getBoundingBox() {
     if (transform == nullptr) {
@@ -294,3 +290,4 @@ Rectangle CollisionShape::drawInspector(Rectangle &previousRectangle) {
     // Return the bounding rectangle for the entire group box
     return returnRect;
 }
+

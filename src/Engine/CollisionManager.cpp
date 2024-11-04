@@ -108,7 +108,7 @@ void CollisionManager::update(float deltaTime) {
     checkBroadCollisions();
     checkNarrowCollisions();
     resolveCollisions();
-    std::cout << "No of potential collisions: " << potentialCollisions.size() << std::endl;
+    // std::cout << "No of potential collisions: " << potentialCollisions.size() << std::endl;
     resetCollisions();
 }
 
@@ -305,7 +305,6 @@ Vector2 CollisionManager::GJKinitialDirection(const Rect &rect, const Circle &ci
 Vector2 CollisionManager::GJKinitialDirection(const Circle &circle1, const Circle &circle2) {
     return Normalize(Vector2{circle2.center.x - circle1.center.x, circle2.center.y - circle1.center.y});
 }
-
 
 // Check if two Shapes collide
 template<typename Tm1, typename Tm2>
