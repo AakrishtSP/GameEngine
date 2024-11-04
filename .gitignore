@@ -52,8 +52,11 @@
 !Data/
 !Data/**
 
+!README.md
+
 # Exclude specific file
 Data/Outdata.json
 
 # Exclude a build directory within assets
 assets/Build
+
