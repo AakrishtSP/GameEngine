@@ -22,7 +22,7 @@
                     "isMoveable": false,
                     "mass": 1.0,
                     "velocity": [
-                        -20.0,
+                        0.0,
                         0.0
                     ]
                 },
@@ -54,8 +54,8 @@
                             "rectangle": [
                                 0.0,
                                 0.0,
-                                150.0,
-                                150.0
+                                50.0,
+                                50.0
                             ],
                             "rotation": 0.0
                         }
@@ -65,8 +65,8 @@
                     "componentType": "Transform2D",
                     "isActive": true,
                     "position": [
-                        3.337386131286621,
-                        0.0
+                        46.74677276611328,
+                        -82.59321594238281
                     ],
                     "rotation": 0.0,
                     "scale": 1.0
@@ -82,16 +82,16 @@
                     "shapes": [
                         {
                             "circle": [
+                                8.407790785948902e-45,
                                 0.0,
-                                0.0,
-                                0.0
+                                9.80908925027372e-45
                             ],
                             "isCircle": false,
                             "rectangle": [
                                 0.0,
                                 0.0,
-                                200.0,
-                                200.0
+                                75.0,
+                                75.0
                             ],
                             "rotation": 0.0
                         }
@@ -101,15 +101,15 @@
                     "componentType": "Transform2D",
                     "isActive": true,
                     "position": [
-                        -100.0,
-                        -100.0
+                        -92.39210510253906,
+                        -123.36145782470703
                     ],
                     "rotation": 0.0,
                     "scale": 1.0
                 },
                 {
                     "componentType": "SpriteRenderer",
-                    "filename": "../assets/Raylib_logo.png",
+                    "filename": "../assets/cpp.png",
                     "isActive": true,
                     "offset": [
                         0.0,
@@ -133,7 +133,7 @@
                         0.0
                     ],
                     "isActive": true,
-                    "isMoveable": false,
+                    "isMoveable": true,
                     "mass": 1.0,
                     "velocity": [
                         0.0,
@@ -147,68 +147,7 @@
     "components": [
         {
             "componentType": "Collider",
-            "shapes": [
-                {
-                    "circle": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isCircle": false,
-                    "rectangle": [
-                        -640.0,
-                        0.0,
-                        5.0,
-                        670.0
-                    ],
-                    "rotation": 0.0
-                },
-                {
-                    "circle": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isCircle": false,
-                    "rectangle": [
-                        640.0,
-                        0.0,
-                        5.0,
-                        670.0
-                    ],
-                    "rotation": 0.0
-                },
-                {
-                    "circle": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isCircle": false,
-                    "rectangle": [
-                        0.0,
-                        -360.0,
-                        1230.0,
-                        5.0
-                    ],
-                    "rotation": 0.0
-                },
-                {
-                    "circle": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "isCircle": false,
-                    "rectangle": [
-                        0.0,
-                        360.0,
-                        1230.0,
-                        5.0
-                    ],
-                    "rotation": 0.0
-                }
-            ]
+            "shapes": []
         },
         {
             "componentType": "Transform2D",

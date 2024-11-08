@@ -6,7 +6,7 @@ int main() {
     engine.setWorldGravity({0, -1000});
     engine.setPhysicsUpdateInterval(1.0f / 120.0f);
 
-    // engine.deserializeScene("../Data/data.json");
+    // engine.deserializeScene("../Data/data.json");   //This can be used to load scene from json file
 
     float screen_width = GetScreenWidth();
     float screen_height = GetScreenHeight();
@@ -17,11 +17,6 @@ int main() {
 
     auto rootTransform = root->addComponent<Transform2D>();
     auto rootCollider = root->addComponent<Collider>();
-    //Add collider to all bounds of screen
-    // rootCollider->addCollisionShape(Rectangle{-half_screen_width, 0, 5, screen_height-50});
-    // rootCollider->addCollisionShape(Rectangle{half_screen_width, 0, 5, screen_height-50});
-    // rootCollider->addCollisionShape(Rectangle{0, -half_screen_height, screen_width-50, 5});
-    // rootCollider->addCollisionShape(Rectangle{0, half_screen_height, screen_width-50, 5});
 
     auto &child1 = root->addChild("Child1");
     auto &child2 = root->addChild("Child2");
