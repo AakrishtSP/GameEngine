@@ -46,10 +46,10 @@ int CollisionManager::triangleContainOrigin(Vector2 oldVec1, Vector2 oldVec2, Ve
 Vector2 CollisionManager::supportFunction(const Rect &rect, const Vector2 &direction) {
 
     Vector2 dir = Normalize(direction);
-    Vector2 vertices[4] = {{rect.x, rect.y},
-                           {rect.x + rect.width, rect.y},
-                           {rect.x + rect.width, rect.y + rect.height},
-                           {rect.x, rect.y + rect.height}};
+    Vector2 vertices[4] = {{rect.x - rect.width/2, rect.y - rect.height/2},
+                           {rect.x + rect.width/2, rect.y - rect.height/2},
+                           {rect.x + rect.width/2, rect.y + rect.height/2},
+                           {rect.x - rect.width/2, rect.y + rect.height/2}};
 
     Vector2 rotationPoint = {rect.x + rect.width / 2, rect.y + rect.height / 2};
     for (int i = 0; i < 4; i++) {
